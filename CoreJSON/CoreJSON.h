@@ -8,8 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "yajl_parse.h"
 #import "yajl_gen.h"
-//#import "yajl/yajl_parse.h"
-//#import "yajl/yajl_gen.h"
 
 #define CORE_JSON_STACK_MAX_DEPTH 1024
 

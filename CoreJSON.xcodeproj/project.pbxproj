@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EBB8104D130BEC3E00CF5EF8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB8104C130BEC3E00CF5EF8 /* Cocoa.framework */; };
+		EBB81057130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81055130BEC3E00CF5EF8 /* InfoPlist.strings */; };
+		EBB8105F130BEC3E00CF5EF8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB8104C130BEC3E00CF5EF8 /* Cocoa.framework */; };
+		EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */; };
+		EBB81068130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */; };
+		EBB8106B130BEC3E00CF5EF8 /* CoreJSONTests.h in Resources */ = {isa = PBXBuildFile; fileRef = EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */; };
+		EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */; };
+		EBB81078130BEC8C00CF5EF8 /* CoreJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB81076130BEC8C00CF5EF8 /* CoreJSON.m */; };
+		EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EBB81060130BEC3E00CF5EF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EBB8103F130BEC3E00CF5EF8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EBB81048130BEC3E00CF5EF8;
+			remoteInfo = CoreJSON;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB8104C130BEC3E00CF5EF8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		EBB8104F130BEC3E00CF5EF8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		EBB81050130BEC3E00CF5EF8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EBB81051130BEC3E00CF5EF8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EBB81054130BEC3E00CF5EF8 /* CoreJSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreJSON-Info.plist"; sourceTree = "<group>"; };
+		EBB81056130BEC3E00CF5EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EBB81058130BEC3E00CF5EF8 /* CoreJSON-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreJSON-Prefix.pch"; sourceTree = "<group>"; };
+		EBB8105E130BEC3E00CF5EF8 /* CoreJSONTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreJSONTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB81065130BEC3E00CF5EF8 /* CoreJSONTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreJSONTests-Info.plist"; sourceTree = "<group>"; };
+		EBB81067130BEC3E00CF5EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EBB81069130BEC3E00CF5EF8 /* CoreJSONTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreJSONTests-Prefix.pch"; sourceTree = "<group>"; };
+		EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreJSONTests.h; sourceTree = "<group>"; };
+		EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreJSONTests.m; sourceTree = "<group>"; };
+		EBB81076130BEC8C00CF5EF8 /* CoreJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreJSON.m; sourceTree = "<group>"; };
+		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EBB81045130BEC3E00CF5EF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB8104D130BEC3E00CF5EF8 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EBB8105A130BEC3E00CF5EF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB8105F130BEC3E00CF5EF8 /* Cocoa.framework in Frameworks */,
+				EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EBB8103D130BEC3E00CF5EF8 = {
+			isa = PBXGroup;
+			children = (
+				EBB81052130BEC3E00CF5EF8 /* CoreJSON */,
+				EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */,
+				EBB8104B130BEC3E00CF5EF8 /* Frameworks */,
+				EBB8104A130BEC3E00CF5EF8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EBB8104A130BEC3E00CF5EF8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */,
+				EBB8105E130BEC3E00CF5EF8 /* CoreJSONTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EBB8104B130BEC3E00CF5EF8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EBB8104C130BEC3E00CF5EF8 /* Cocoa.framework */,
+				EBB8104E130BEC3E00CF5EF8 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EBB8104E130BEC3E00CF5EF8 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EBB8104F130BEC3E00CF5EF8 /* AppKit.framework */,
+				EBB81050130BEC3E00CF5EF8 /* CoreData.framework */,
+				EBB81051130BEC3E00CF5EF8 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		EBB81052130BEC3E00CF5EF8 /* CoreJSON */ = {
+			isa = PBXGroup;
+			children = (
+				EBB81053130BEC3E00CF5EF8 /* Supporting Files */,
+				EBB81076130BEC8C00CF5EF8 /* CoreJSON.m */,
+				EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */,
+			);
+			path = CoreJSON;
+			sourceTree = "<group>";
+		};
+		EBB81053130BEC3E00CF5EF8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EBB81054130BEC3E00CF5EF8 /* CoreJSON-Info.plist */,
+				EBB81055130BEC3E00CF5EF8 /* InfoPlist.strings */,
+				EBB81058130BEC3E00CF5EF8 /* CoreJSON-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */ = {
+			isa = PBXGroup;
+			children = (
+				EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */,
+				EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */,
+				EBB81064130BEC3E00CF5EF8 /* Supporting Files */,
+			);
+			path = CoreJSONTests;
+			sourceTree = "<group>";
+		};
+		EBB81064130BEC3E00CF5EF8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EBB81065130BEC3E00CF5EF8 /* CoreJSONTests-Info.plist */,
+				EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */,
+				EBB81069130BEC3E00CF5EF8 /* CoreJSONTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		EBB81046130BEC3E00CF5EF8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		EBB81048130BEC3E00CF5EF8 /* CoreJSON */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */;
+			buildPhases = (
+				EBB81044130BEC3E00CF5EF8 /* Sources */,
+				EBB81045130BEC3E00CF5EF8 /* Frameworks */,
+				EBB81046130BEC3E00CF5EF8 /* Headers */,
+				EBB81047130BEC3E00CF5EF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CoreJSON;
+			productName = CoreJSON;
+			productReference = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EBB81073130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSONTests" */;
+			buildPhases = (
+				EBB81059130BEC3E00CF5EF8 /* Sources */,
+				EBB8105A130BEC3E00CF5EF8 /* Frameworks */,
+				EBB8105B130BEC3E00CF5EF8 /* Resources */,
+				EBB8105C130BEC3E00CF5EF8 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EBB81061130BEC3E00CF5EF8 /* PBXTargetDependency */,
+			);
+			name = CoreJSONTests;
+			productName = CoreJSONTests;
+			productReference = EBB8105E130BEC3E00CF5EF8 /* CoreJSONTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EBB8103F130BEC3E00CF5EF8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "Inteliv Ltd";
+			};
+			buildConfigurationList = EBB81042130BEC3E00CF5EF8 /* Build configuration list for PBXProject "CoreJSON" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EBB8103D130BEC3E00CF5EF8;
+			productRefGroup = EBB8104A130BEC3E00CF5EF8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EBB81048130BEC3E00CF5EF8 /* CoreJSON */,
+				EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EBB81047130BEC3E00CF5EF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB81057130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EBB8105B130BEC3E00CF5EF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB81068130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */,
+				EBB8106B130BEC3E00CF5EF8 /* CoreJSONTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EBB8105C130BEC3E00CF5EF8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EBB81044130BEC3E00CF5EF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB81078130BEC8C00CF5EF8 /* CoreJSON.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EBB81059130BEC3E00CF5EF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EBB81061130BEC3E00CF5EF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EBB81048130BEC3E00CF5EF8 /* CoreJSON */;
+			targetProxy = EBB81060130BEC3E00CF5EF8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EBB81055130BEC3E00CF5EF8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EBB81056130BEC3E00CF5EF8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EBB81067130BEC3E00CF5EF8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EBB8106E130BEC3E00CF5EF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EBB8106F130BEC3E00CF5EF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EBB81071130BEC3E00CF5EF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/yajl/src/api\"";
+				INFOPLIST_FILE = "CoreJSON/CoreJSON-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		EBB81072130BEC3E00CF5EF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/yajl/src/api\"";
+				INFOPLIST_FILE = "CoreJSON/CoreJSON-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		EBB81074130BEC3E00CF5EF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSONTests/CoreJSONTests-Prefix.pch";
+				INFOPLIST_FILE = "CoreJSONTests/CoreJSONTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		EBB81075130BEC3E00CF5EF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSONTests/CoreJSONTests-Prefix.pch";
+				INFOPLIST_FILE = "CoreJSONTests/CoreJSONTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EBB81042130BEC3E00CF5EF8 /* Build configuration list for PBXProject "CoreJSON" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB8106E130BEC3E00CF5EF8 /* Debug */,
+				EBB8106F130BEC3E00CF5EF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB81071130BEC3E00CF5EF8 /* Debug */,
+				EBB81072130BEC3E00CF5EF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EBB81073130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSONTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB81074130BEC3E00CF5EF8 /* Debug */,
+				EBB81075130BEC3E00CF5EF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EBB8103F130BEC3E00CF5EF8 /* Project object */;
+}
