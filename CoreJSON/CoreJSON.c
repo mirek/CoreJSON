@@ -1,13 +1,16 @@
 //
 // CoreJSON.m
-// CoreJSON
+// CoreJSON Framework
 //
-// Copyright 2011 Mirek Rusin <mirek [at] me [dot] com> http://github.com/mirek/CoreJSON
+// Copyright 2011 Mirek Rusin <mirek [at] me [dot] com>
+//                http://github.com/mirek/CoreJSON
 //
 
 #include "CoreJSON.h"
 
-__JSONUTF8String __JSONUTF8StringMake(CFAllocatorRef allocator, CFStringRef string) {
+#pragma Internal string helper for fast UTF8 buffer access
+
+inline __JSONUTF8String __JSONUTF8StringMake(CFAllocatorRef allocator, CFStringRef string) {
   __JSONUTF8String utf8String;
   utf8String.allocator = allocator;
   utf8String.string = string;
@@ -23,23 +26,23 @@ __JSONUTF8String __JSONUTF8StringMake(CFAllocatorRef allocator, CFStringRef stri
   return utf8String;
 }
 
-const unsigned char *__JSONUTF8StringGetBuffer(__JSONUTF8String utf8String) {
+inline const unsigned char *__JSONUTF8StringGetBuffer(__JSONUTF8String utf8String) {
   return utf8String.pointer ? utf8String.pointer : utf8String.buffer;
 }
 
-CFIndex __JSONUTF8StringGetMaximumSize(__JSONUTF8String utf8String) {
+inline CFIndex __JSONUTF8StringGetMaximumSize(__JSONUTF8String utf8String) {
   return utf8String.maximumSize;
 }
 
-void __JSONUTF8StringDestroy(__JSONUTF8String utf8String) {
+inline void __JSONUTF8StringDestroy(__JSONUTF8String utf8String) {
   if (utf8String.buffer) {
     CFAllocatorDeallocate(utf8String.allocator, (void *)utf8String.buffer);
   }
 }
 
-#pragma Helper stack
+#pragma Internal stack
 
-__JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIndex index, CFIndex valuesLength, CFIndex keysLength) {
+inline __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIndex index, CFIndex valuesLength, CFIndex keysLength) {
   __JSONStackEntryRef entry = CFAllocatorAllocate(allocator, sizeof(__JSONStackEntry), 0);
   if (entry) {
     entry->allocator = allocator;
@@ -58,32 +61,32 @@ __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIndex ind
   return entry;
 }
 
-__JSONStackEntryRef __JSONStackEntryRetain(__JSONStackEntryRef entry) {
+inline __JSONStackEntryRef __JSONStackEntryRetain(__JSONStackEntryRef entry) {
   entry->retainCount++;
   return entry;
 }
 
-CFIndex __JSONStackEntryRelease(__JSONStackEntryRef entry) {
+inline CFIndex __JSONStackEntryRelease(__JSONStackEntryRef entry) {
   return --entry->retainCount;
 }
 
-__JSONStackEntryRef __JSONStackEntryReleaseRef(__JSONStackEntryRef *entry) {
+inline __JSONStackEntryRef __JSONStackEntryReleaseRef(__JSONStackEntryRef *entry) {
   if (__JSONStackEntryRelease(*entry))
     entry = NULL;
   return *entry;
 }
 
-void __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef value) {
+inline void __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef value) {
   // TODO: Reallocate when out of bounds
   entry->values[entry->valuesIndex++] = value;
 }
 
-void __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) {
+inline void __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) {
   // TODO: Reallocate when out of bounds
   entry->keys[entry->keysIndex++] = key;
 }
 
-__JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDepth) {
+inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDepth) {
   __JSONStackRef stack = CFAllocatorAllocate(allocator, sizeof(__JSONStack), 0);
   if (stack) {
     stack->allocator = allocator;
@@ -95,18 +98,19 @@ __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDepth) {
   return stack;
 }
 
-__JSONStackEntryRef __JSONStackGetTop(__JSONStackRef stack) {
+inline __JSONStackEntryRef __JSONStackGetTop(__JSONStackRef stack) {
   if (stack->index > 0)
     return stack->stack[stack->index - 1];
   else
     return NULL;
 }
 
-BOOL __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
-  BOOL success = NO;
+inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
+  bool success = 0;
   if (stack && entry) {
     if (stack->index < stack->size) {
       stack->stack[stack->index++] = __JSONStackEntryRetain(entry);
+      success = 1;
     } else {
       // TODO: Out of bounds
     }
@@ -114,7 +118,7 @@ BOOL __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
   return success;
 }
 
-__JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
+inline __JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
   __JSONStackEntryRef entry = NULL;
   if (stack) {
     if (--stack->index >= 0) {
@@ -126,25 +130,25 @@ __JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
   return entry;
 }
 
-BOOL __JSONStackAppendValueAtTop(__JSONStackRef stack, CFTypeRef value) {
-  BOOL success = NO;
+inline bool __JSONStackAppendValueAtTop(__JSONStackRef stack, CFTypeRef value) {
+  bool success = 0;
   if (stack) {
     __JSONStackEntryRef entry = __JSONStackGetTop(stack);
     if (entry) {
       __JSONStackEntryAppendValue(entry, value);
-      success = YES;
+      success = 1;
     }
   }
   return success;
 }
 
-BOOL __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFTypeRef key) {
-  BOOL success = NO;
+inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFTypeRef key) {
+  bool success = 0;
   if (stack) {
     __JSONStackEntryRef entry = __JSONStackGetTop(stack);
     if (entry) {
       __JSONStackEntryAppendKey(entry, key);
-      success = YES;
+      success = 1;
     }
   }
   return success;
@@ -154,7 +158,7 @@ BOOL __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFTypeRef key) {
 
 int JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, NO);
+  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
   CFArrayAppendValue(json->elements, string);
   __JSONStackAppendValueAtTop(json->stack, string);
   CFRelease(string);
@@ -168,7 +172,7 @@ int JSONParserAppendNull(void *context) {
   return 1;
 }
 
-int JSONParserAppendBooleanWithInteger(void *context, int value) {
+int JSONParserAppendbooleanWithInteger(void *context, int value) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFBooleanRef boolean = value ? kCFBooleanTrue : kCFBooleanFalse;
   CFArrayAppendValue(json->elements, boolean);
@@ -177,7 +181,7 @@ int JSONParserAppendBooleanWithInteger(void *context, int value) {
 }
 
 //int JSONParserAppendNumberWithString(void *context, const char *value, unsigned int length) {
-//  CFStringRef string = CFStringCreateWithBytes(NULL, (const UInt8 *)s, l, NSUTF8StringEncoding, YES);
+//  CFStringRef string = CFStringCreateWithBytes(NULL, (const UInt8 *)s, l, NSUTF8StringEncoding, 1);
 //  //  CFArrayAppendValue(json->elements, string);
 //  CFRelease(string);
 //  return 1;
@@ -203,7 +207,7 @@ int JSONParserAppendNumberWithDouble(void *context, double value) {
 
 int JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, NO);
+  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
   CFArrayAppendValue(json->elements, string);
   __JSONStackAppendKeyAtTop(json->stack, string);
   CFRelease(string);
@@ -260,7 +264,7 @@ int JSONParserAppendArrayStart(void *context) {
   return 1;
 }
 
-int JSONParserAppendArrayEnd(void *context) {
+inline int JSONParserAppendArrayEnd(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   __JSONStackEntryRef entry = __JSONStackPop(json->stack);
   
@@ -274,13 +278,15 @@ int JSONParserAppendArrayEnd(void *context) {
   return 1;
 }
 
-CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
+#pragma Public API
+
+inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
   CoreJSONRef json = CFAllocatorAllocate(allocator, sizeof(CoreJSON), 0);
   if (json) {
     json->allocator = allocator;
     
     json->yajlParserCallbacks.yajl_null        = JSONParserAppendNull;
-    json->yajlParserCallbacks.yajl_boolean     = JSONParserAppendBooleanWithInteger;
+    json->yajlParserCallbacks.yajl_boolean     = JSONParserAppendbooleanWithInteger;
     
     // Set number or integer and double. Never all 3.
     json->yajlParserCallbacks.yajl_number      = NULL;
@@ -296,11 +302,11 @@ CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     
     json->yajlParserCallbacks.yajl_string      = JSONParserAppendStringWithBytes;
     
-    json->yajlParserConfig.allowComments = YES;
-    json->yajlParserConfig.checkUTF8 = YES;
+    json->yajlParserConfig.allowComments = 1;
+    json->yajlParserConfig.checkUTF8 = 1;
     json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, NULL, (void *)json);
     
-    json->yajlGeneratorConfig.beautify = YES;
+    json->yajlGeneratorConfig.beautify = 1;
     json->yajlGeneratorConfig.indentString = "  ";
     json->yajlGenerator = yajl_gen_alloc(&json->yajlGeneratorConfig, NULL);
     
@@ -310,15 +316,15 @@ CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
   return json;
 }
 
-void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
+inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   
   // Let's make sure we've got a clean plate first
   CFArrayRemoveAllValues(json->elements);
   
   __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
-  if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), __JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
+  if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
     // TODO: Error stuff
-    //printf("ERROR: %s\n", yajl_get_error(json->yajlParser, YES, __JSONUTF8StringGetBuffer(utf8), __JSONUTF8StringGetMaximumSize(utf8)));
+    //printf("ERROR: %s\n", yajl_get_error(json->yajlParser, 1, __JSONUTF8StringGetBuffer(utf8), __JSONUTF8StringGetMaximumSize(utf8)));
   }
   __JSONUTF8StringDestroy(utf8);
   
@@ -327,7 +333,7 @@ void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   yajl_free(json->yajlParser);
 }
 
-CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string) {
+inline CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string) {
   CoreJSONRef json = JSONCreate(allocator);
   if (json) {
     JSONParseWithString(json, string);
@@ -335,6 +341,6 @@ CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string) {
   return json;
 }
 
-CFTypeRef JSONGetObject(CoreJSONRef json) {
-  return CFArrayGetObjectAtIndex(json->elements, 0);
+inline CFTypeRef JSONGetObject(CoreJSONRef json) {
+  return CFArrayGetValueAtIndex(json->elements, 0);
 }
