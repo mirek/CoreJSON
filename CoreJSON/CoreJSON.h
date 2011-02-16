@@ -104,16 +104,16 @@ bool                __JSONStackAppendKeyAtTop   (__JSONStackRef stack, CFTypeRef
 
 #pragma Internal callbacks for libyajl parser
 
-int JSONParserAppendStringWithBytes    (void *context, const unsigned char *value, unsigned int length);
-int JSONParserAppendNull               (void *context);
-int JSONParserAppendBooleanWithInteger (void *context, int value);
-int JSONParserAppendNumberWithLong     (void *context, long value);
-int JSONParserAppendNumberWithDouble   (void *context, double value);
-int JSONParserAppendMapKeyWithBytes    (void *context, const unsigned char *value, unsigned int length);
-int JSONParserAppendMapStart           (void *context);
-int JSONParserAppendMapEnd             (void *context);
-int JSONParserAppendArrayStart         (void *context);
-int JSONParserAppendArrayEnd           (void *context);
+int __JSONParserAppendStringWithBytes    (void *context, const unsigned char *value, unsigned int length);
+int __JSONParserAppendNull               (void *context);
+int __JSONParserAppendBooleanWithInteger (void *context, int value);
+int __JSONParserAppendNumberWithLong     (void *context, long value);
+int __JSONParserAppendNumberWithDouble   (void *context, double value);
+int __JSONParserAppendMapKeyWithBytes    (void *context, const unsigned char *value, unsigned int length);
+int __JSONParserAppendMapStart           (void *context);
+int __JSONParserAppendMapEnd             (void *context);
+int __JSONParserAppendArrayStart         (void *context);
+int __JSONParserAppendArrayEnd           (void *context);
 
 #pragma Public API
 

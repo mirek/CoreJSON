@@ -1,5 +1,5 @@
 //
-// CoreJSON.m
+// CoreJSON.c
 // CoreJSON Framework
 //
 // Copyright 2011 Mirek Rusin <mirek [at] me [dot] com>
@@ -156,7 +156,7 @@ inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFTypeRef key) {
 
 #pragma Parser callbacks
 
-int JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
+inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
   CFArrayAppendValue(json->elements, string);
@@ -165,14 +165,14 @@ int JSONParserAppendStringWithBytes(void *context, const unsigned char *value, u
   return 1;
 }
 
-int JSONParserAppendNull(void *context) {
+inline int __JSONParserAppendNull(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFArrayAppendValue(json->elements, kCFNull);
   __JSONStackAppendValueAtTop(json->stack, kCFNull);
   return 1;
 }
 
-int JSONParserAppendbooleanWithInteger(void *context, int value) {
+inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFBooleanRef boolean = value ? kCFBooleanTrue : kCFBooleanFalse;
   CFArrayAppendValue(json->elements, boolean);
@@ -180,14 +180,16 @@ int JSONParserAppendbooleanWithInteger(void *context, int value) {
   return 1;
 }
 
-//int JSONParserAppendNumberWithString(void *context, const char *value, unsigned int length) {
+//inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
 //  CFStringRef string = CFStringCreateWithBytes(NULL, (const UInt8 *)s, l, NSUTF8StringEncoding, 1);
-//  //  CFArrayAppendValue(json->elements, string);
+//  
+//  CFNumberFormatterRef formatter = ...
+//  
 //  CFRelease(string);
 //  return 1;
 //}
 
-int JSONParserAppendNumberWithLong(void *context, long value) {
+inline int __JSONParserAppendNumberWithLong(void *context, long value) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFNumberRef number = CFNumberCreate(json->allocator, kCFNumberLongType, &value);
   CFArrayAppendValue(json->elements, number);
@@ -196,7 +198,7 @@ int JSONParserAppendNumberWithLong(void *context, long value) {
   return 1;
 }
 
-int JSONParserAppendNumberWithDouble(void *context, double value) {
+inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFNumberRef number = CFNumberCreate(json->allocator, kCFNumberDoubleType, &value);
   CFArrayAppendValue(json->elements, number);
@@ -205,7 +207,7 @@ int JSONParserAppendNumberWithDouble(void *context, double value) {
   return 1;
 }
 
-int JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
+inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
   CFArrayAppendValue(json->elements, string);
@@ -214,7 +216,7 @@ int JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, u
   return 1;
 }
 
-int JSONParserAppendMapStart(void *context) {
+inline int __JSONParserAppendMapStart(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   
   // Placeholder for the CFDictionaryRef which will come later
@@ -229,7 +231,7 @@ int JSONParserAppendMapStart(void *context) {
   return 1;
 }
 
-int JSONParserAppendMapEnd(void *context) {
+inline int __JSONParserAppendMapEnd(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   __JSONStackEntryRef entry = __JSONStackPop(json->stack);
   
@@ -245,7 +247,7 @@ int JSONParserAppendMapEnd(void *context) {
   return 1;
 }
 
-int JSONParserAppendArrayStart(void *context) {
+inline int __JSONParserAppendArrayStart(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   
   // Let's save this space in elements for the array. When we
@@ -264,7 +266,7 @@ int JSONParserAppendArrayStart(void *context) {
   return 1;
 }
 
-inline int JSONParserAppendArrayEnd(void *context) {
+inline int __JSONParserAppendArrayEnd(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   __JSONStackEntryRef entry = __JSONStackPop(json->stack);
   
@@ -285,22 +287,22 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
   if (json) {
     json->allocator = allocator;
     
-    json->yajlParserCallbacks.yajl_null        = JSONParserAppendNull;
-    json->yajlParserCallbacks.yajl_boolean     = JSONParserAppendbooleanWithInteger;
+    json->yajlParserCallbacks.yajl_null        = __JSONParserAppendNull;
+    json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendbooleanWithInteger;
     
     // Set number or integer and double. Never all 3.
     json->yajlParserCallbacks.yajl_number      = NULL;
-    json->yajlParserCallbacks.yajl_integer     = JSONParserAppendNumberWithLong;
-    json->yajlParserCallbacks.yajl_double      = JSONParserAppendNumberWithDouble;
+    json->yajlParserCallbacks.yajl_integer     = __JSONParserAppendNumberWithLong;
+    json->yajlParserCallbacks.yajl_double      = __JSONParserAppendNumberWithDouble;
     
-    json->yajlParserCallbacks.yajl_start_map   = JSONParserAppendMapStart;
-    json->yajlParserCallbacks.yajl_map_key     = JSONParserAppendMapKeyWithBytes;
-    json->yajlParserCallbacks.yajl_end_map     = JSONParserAppendMapEnd;
+    json->yajlParserCallbacks.yajl_start_map   = __JSONParserAppendMapStart;
+    json->yajlParserCallbacks.yajl_map_key     = __JSONParserAppendMapKeyWithBytes;
+    json->yajlParserCallbacks.yajl_end_map     = __JSONParserAppendMapEnd;
     
-    json->yajlParserCallbacks.yajl_start_array = JSONParserAppendArrayStart;
-    json->yajlParserCallbacks.yajl_end_array   = JSONParserAppendArrayEnd;
+    json->yajlParserCallbacks.yajl_start_array = __JSONParserAppendArrayStart;
+    json->yajlParserCallbacks.yajl_end_array   = __JSONParserAppendArrayEnd;
     
-    json->yajlParserCallbacks.yajl_string      = JSONParserAppendStringWithBytes;
+    json->yajlParserCallbacks.yajl_string      = __JSONParserAppendStringWithBytes;
     
     json->yajlParserConfig.allowComments = 1;
     json->yajlParserConfig.checkUTF8 = 1;
