@@ -16,6 +16,8 @@
 		EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; };
 		EBCB75E4130C0E8D009F0B55 /* libyajl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */; };
 		EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
+		EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
+		EBCB75EB130C112A009F0B55 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75EA130C112A009F0B55 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,7 @@
 		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
 		EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libyajl.dylib; path = usr/local/lib/libyajl.dylib; sourceTree = SDKROOT; };
 		EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EBCB75EA130C112A009F0B55 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +62,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBCB75EB130C112A009F0B55 /* Foundation.framework in Frameworks */,
 				EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */,
+				EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */,
+				EBCB75EA130C112A009F0B55 /* Foundation.framework */,
 				EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */,
 			);
 			name = Frameworks;

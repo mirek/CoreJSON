@@ -7,7 +7,7 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-
+#import "CoreJSON.h"
 
 @interface CoreJSONTests : SenTestCase {
 @private

@@ -140,3 +140,4 @@ typedef CoreJSON *CoreJSONRef;
 extern CoreJSONRef JSONCreate           (CFAllocatorRef allocator);
 extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef string);
 extern void        JSONParseWithString  (CoreJSONRef json, CFStringRef string);
+extern CFTypeRef   JSONGetObject        (CoreJSONRef json);
