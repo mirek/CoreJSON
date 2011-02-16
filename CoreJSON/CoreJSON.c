@@ -46,6 +46,7 @@ inline __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIn
   __JSONStackEntryRef entry = CFAllocatorAllocate(allocator, sizeof(__JSONStackEntry), 0);
   if (entry) {
     entry->allocator = allocator;
+    entry->retainCount = 1;
     entry->index = index;
     entry->valuesIndex = 0;
     if ((entry->valuesLength = valuesLength))
@@ -67,11 +68,12 @@ inline __JSONStackEntryRef __JSONStackEntryRetain(__JSONStackEntryRef entry) {
 }
 
 inline CFIndex __JSONStackEntryRelease(__JSONStackEntryRef entry) {
+  // TODO: Deallocate stack entry arrays
   return --entry->retainCount;
 }
 
 inline __JSONStackEntryRef __JSONStackEntryReleaseRef(__JSONStackEntryRef *entry) {
-  if (__JSONStackEntryRelease(*entry))
+  if (0 == __JSONStackEntryRelease(*entry))
     entry = NULL;
   return *entry;
 }
@@ -90,12 +92,18 @@ inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDep
   __JSONStackRef stack = CFAllocatorAllocate(allocator, sizeof(__JSONStack), 0);
   if (stack) {
     stack->allocator = allocator;
+    stack->retainCount = 1;
     stack->size = maxDepth;
     stack->index = 0;
     stack->stack = CFAllocatorAllocate(stack->allocator, sizeof(__JSONStackEntryRef) * stack->size, 0);
     memset(stack->stack, 0, sizeof(__JSONStackEntryRef) * stack->size);
   }
   return stack;
+}
+
+inline CFIndex __JSONStackRelease(__JSONStackRef stack) {
+  // TODO: Stack deallocator
+  return --stack->retainCount;
 }
 
 inline __JSONStackEntryRef __JSONStackGetTop(__JSONStackRef stack) {
@@ -112,7 +120,7 @@ inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
       stack->stack[stack->index++] = __JSONStackEntryRetain(entry);
       success = 1;
     } else {
-      // TODO: Out of bounds
+      // TODO: Out of bounds, reallocate more space
     }
   }
   return success;
@@ -121,10 +129,11 @@ inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
 inline __JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
   __JSONStackEntryRef entry = NULL;
   if (stack) {
+    // TODO: __JSONStackEntryRelease(stack->stack[stack->index])
     if (--stack->index >= 0) {
       entry = stack->stack[stack->index];
     } else {
-      // TODO: Out of bounds
+      // TODO: Out of bounds, this is error, should never happen
     }
   }
   return entry;
@@ -316,6 +325,32 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     json->stack = __JSONStackCreate(json->allocator, CORE_JSON_STACK_MAX_DEPTH);
   }
   return json;
+}
+
+inline CFIndex JSONRelease(CoreJSONRef json) {
+  CFIndex retainCount = -1;
+  if (json) {
+    if (json->retainCount > 0) {
+      if ((retainCount = --json->retainCount) == 0) {
+        CFAllocatorRef allocator = json->allocator;
+        
+        yajl_free(json->yajlParser);
+//        yajl_free(json->yajlGenerator);
+        
+        CFRelease(json->elements);
+        __JSONStackRelease(json->stack);
+
+        CFAllocatorDeallocate(allocator, json);
+      }
+    }
+  }
+  return retainCount;
+}
+
+inline CoreJSONRef JSONReleaseRef(CoreJSONRef *json) {
+  if (0 == JSONRelease(*json))
+    json = NULL;
+  return *json;
 }
 
 inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {

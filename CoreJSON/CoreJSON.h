@@ -64,17 +64,17 @@ void                 __JSONUTF8StringDestroy        (__JSONUTF8String utf8String
 // maps by a single create call.
 typedef struct {
   CFAllocatorRef allocator;
-  CFIndex    retainCount;
+  CFIndex        retainCount;
   
-  CFIndex    index;
+  CFIndex        index;
   
-  CFTypeRef *values;
-  CFIndex    valuesIndex;
-  CFIndex    valuesLength;
+  CFTypeRef     *values;
+  CFIndex        valuesIndex;
+  CFIndex        valuesLength;
   
-  CFTypeRef *keys;
-  CFIndex    keysIndex;
-  CFIndex    keysLength;
+  CFTypeRef     *keys;
+  CFIndex        keysIndex;
+  CFIndex        keysLength;
 } __JSONStackEntry;
 
 typedef __JSONStackEntry *__JSONStackEntryRef;
@@ -88,6 +88,7 @@ void                __JSONStackEntryAppendKey   (__JSONStackEntryRef entry, CFTy
 
 typedef struct {
   CFAllocatorRef       allocator;
+  CFIndex              retainCount;
   __JSONStackEntryRef *stack;
   CFIndex              index;
   CFIndex              size;
@@ -96,6 +97,7 @@ typedef struct {
 typedef __JSONStack *__JSONStackRef;
 
 __JSONStackRef      __JSONStackCreate           (CFAllocatorRef allocator, CFIndex maxDepth);
+CFIndex             __JSONStackRelease          (__JSONStackRef stack);
 __JSONStackEntryRef __JSONStackGetTop           (__JSONStackRef stack);
 bool                __JSONStackPush             (__JSONStackRef stack, __JSONStackEntryRef entry);
 __JSONStackEntryRef __JSONStackPop              (__JSONStackRef stack);
@@ -118,8 +120,8 @@ int __JSONParserAppendArrayEnd           (void *context);
 #pragma Public API
 
 typedef struct {
-  CFAllocatorRef allocator;
-  CFIndex retainCount;
+  CFAllocatorRef     allocator;
+  CFIndex            retainCount;
   
   yajl_handle        yajlParser;
   yajl_parser_config yajlParserConfig;
@@ -139,5 +141,7 @@ typedef CoreJSON *CoreJSONRef;
 
 extern CoreJSONRef JSONCreate           (CFAllocatorRef allocator);
 extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef string);
-extern void        JSONParseWithString  (CoreJSONRef json, CFStringRef string);
-extern CFTypeRef   JSONGetObject        (CoreJSONRef json);
+extern void        JSONParseWithString  (CoreJSONRef    json,      CFStringRef string);
+extern CFTypeRef   JSONGetObject        (CoreJSONRef    json);
+extern CFIndex     JSONRelease          (CoreJSONRef    json);
+inline CoreJSONRef JSONReleaseRef       (CoreJSONRef   *json);
