@@ -288,7 +288,7 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     json->allocator = allocator;
     
     json->yajlParserCallbacks.yajl_null        = __JSONParserAppendNull;
-    json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendbooleanWithInteger;
+    json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendBooleanWithInteger;
     
     // Set number or integer and double. Never all 3.
     json->yajlParserCallbacks.yajl_number      = NULL;
