@@ -109,6 +109,7 @@ bool                __JSONStackAppendKeyAtTop   (__JSONStackRef stack, CFTypeRef
 int __JSONParserAppendStringWithBytes    (void *context, const unsigned char *value, unsigned int length);
 int __JSONParserAppendNull               (void *context);
 int __JSONParserAppendBooleanWithInteger (void *context, int value);
+int __JSONParserAppendNumberWithBytes    (void *context, const char *value, unsigned int length);
 int __JSONParserAppendNumberWithLong     (void *context, long value);
 int __JSONParserAppendNumberWithDouble   (void *context, double value);
 int __JSONParserAppendMapKeyWithBytes    (void *context, const unsigned char *value, unsigned int length);

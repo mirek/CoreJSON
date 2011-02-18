@@ -189,14 +189,29 @@ inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   return 1;
 }
 
-//inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
-//  CFStringRef string = CFStringCreateWithBytes(NULL, (const UInt8 *)s, l, NSUTF8StringEncoding, 1);
-//  
-//  CFNumberFormatterRef formatter = ...
-//  
-//  CFRelease(string);
-//  return 1;
-//}
+inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
+  CoreJSONRef json = (CoreJSONRef)context;
+  CFNumberRef number = NULL;
+
+  // TODO: anybody how to do it properly?
+  bool looksLikeFloat = 0;
+  for (int i = 0; i < length; i++)
+    if (value[i] == '.' || value[i] == 'e' || value[i] == 'E')
+      looksLikeFloat = 1;
+
+  if (looksLikeFloat) {
+    double value_ = strtod((char *)value, NULL);
+    number = CFNumberCreate(json->allocator, kCFNumberDoubleType, &value_);
+  } else {
+    long long value_ = strtoll((char *)value, NULL, 0);
+    number = CFNumberCreate(json->allocator, kCFNumberLongLongType, &value_);
+  }
+  
+  CFArrayAppendValue(json->elements, number);
+  __JSONStackAppendValueAtTop(json->stack, number);
+  CFRelease(number);
+  return 1;
+}
 
 inline int __JSONParserAppendNumberWithLong(void *context, long value) {
   CoreJSONRef json = (CoreJSONRef)context;
@@ -300,9 +315,9 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendBooleanWithInteger;
     
     // Set number or integer and double. Never all 3.
-    json->yajlParserCallbacks.yajl_number      = NULL;
-    json->yajlParserCallbacks.yajl_integer     = __JSONParserAppendNumberWithLong;
-    json->yajlParserCallbacks.yajl_double      = __JSONParserAppendNumberWithDouble;
+    json->yajlParserCallbacks.yajl_number      = __JSONParserAppendNumberWithBytes;
+    json->yajlParserCallbacks.yajl_integer     = NULL; // __JSONParserAppendNumberWithLong
+    json->yajlParserCallbacks.yajl_double      = NULL; // __JSONParserAppendNumberWithDouble
     
     json->yajlParserCallbacks.yajl_start_map   = __JSONParserAppendMapStart;
     json->yajlParserCallbacks.yajl_map_key     = __JSONParserAppendMapKeyWithBytes;

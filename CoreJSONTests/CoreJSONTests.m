@@ -38,12 +38,35 @@
   }
 }
 
+
 - (void) testUTF8Strings {
   {
     CoreJSONRef json = JSONCreateWithString(NULL, (CFStringRef)@"[\"a’la\"]");
     NSArray *array = (NSArray *)JSONGetObject(json);
     STAssertTrue([array count] == 1, @"Array should have 1 element");
     STAssertTrue([[array objectAtIndex: 0] isEqualToString: @"a’la"], @"UTF8 string a’la expected");
+  }
+}
+
+- (void) testLargeNumbers {
+  {
+    CoreJSONRef json = JSONCreateWithString(NULL, (CFStringRef)@"[4294967297, 9223372036854775807, -9223372036854775807]");
+    NSArray *array = (NSArray *)JSONGetObject(json);
+    STAssertTrue([array count] == 3, @"Array should have 3 elements");
+    STAssertEquals([[array objectAtIndex: 0] longLongValue], 4294967297, @"Large number 2^32+1 expected");
+    STAssertEquals([[array objectAtIndex: 1] longLongValue], 9223372036854775807, @"Large number 2^(64-1) expected");
+    STAssertEquals([[array objectAtIndex: 2] longLongValue], -9223372036854775807, @"Large number 2^(64-1) expected");
+  }
+}
+
+- (void) testFloats {
+  {
+    CoreJSONRef json = JSONCreateWithString(NULL, (CFStringRef)@"[3.14159265, 1.61803399, -57.2957795]");
+    NSArray *array = (NSArray *)JSONGetObject(json);
+    STAssertTrue([array count] == 3, @"Array should have 3 elements");
+    STAssertEquals([[array objectAtIndex: 0] doubleValue], 3.14159265, @"Large number 2^32+1 expected");
+    STAssertEquals([[array objectAtIndex: 1] doubleValue], 1.61803399, @"Large number 2^(64-1) expected");
+    STAssertEquals([[array objectAtIndex: 2] doubleValue], -57.2957795, @"Large number 2^(64-1) expected");
   }
 }
 
