@@ -35,9 +35,8 @@ inline CFIndex __JSONUTF8StringGetMaximumSize(__JSONUTF8String utf8String) {
 }
 
 inline void __JSONUTF8StringDestroy(__JSONUTF8String utf8String) {
-  if (utf8String.buffer) {
+  if (utf8String.buffer)
     CFAllocatorDeallocate(utf8String.allocator, (void *)utf8String.buffer);
-  }
 }
 
 #pragma Internal stack
@@ -50,12 +49,12 @@ inline __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIn
     entry->index = index;
     entry->valuesIndex = 0;
     if ((entry->valuesSize = valuesInitialSize))
-      entry->values = CFAllocatorAllocate(entry->allocator, entry->valuesSize, 0);
+      entry->values = CFAllocatorAllocate(entry->allocator, sizeof(CFIndex) * entry->valuesSize, 0);
     else
       entry->values = NULL;
     entry->keysIndex = 0;
     if ((entry->keysSize = keysInitialSize))
-      entry->keys = CFAllocatorAllocate(entry->allocator, entry->keysSize, 0);
+      entry->keys = CFAllocatorAllocate(entry->allocator, sizeof(CFIndex) * entry->keysSize, 0);
     else
       entry->keys = NULL;
   }
@@ -68,25 +67,28 @@ inline __JSONStackEntryRef __JSONStackEntryRetain(__JSONStackEntryRef entry) {
 }
 
 inline CFIndex __JSONStackEntryRelease(__JSONStackEntryRef entry) {
-  if (--entry->retainCount == 0) {
-    CFAllocatorRef allocator = entry->allocator;
-    if (entry->values)
-      CFAllocatorDeallocate(allocator, entry->values);
-    if (entry->keys)
-      CFAllocatorDeallocate(allocator, entry->keys);
-    CFAllocatorDeallocate(allocator, entry);
-    if (allocator)
-      CFRelease(allocator);
+  CFIndex retainCount = 0;
+  if (entry) {
+    if ((retainCount = --entry->retainCount) == 0) {
+      CFAllocatorRef allocator = entry->allocator;
+      if (entry->values)
+        CFAllocatorDeallocate(allocator, entry->values);
+      if (entry->keys)
+        CFAllocatorDeallocate(allocator, entry->keys);
+      CFAllocatorDeallocate(allocator, entry);
+      if (allocator)
+        CFRelease(allocator);
+    }
   }
-  return entry->retainCount;
+  return retainCount;
 }
 
-inline bool __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef value) {
+inline bool __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFIndex value) {
   bool success = 0;
   if (entry) {
     if (entry->valuesIndex == entry->valuesSize) { // Reallocate more space
       CFIndex largerSize = entry->valuesSize ? entry->valuesSize << 1 : 1024;
-      CFTypeRef *largerValues = CFAllocatorReallocate(entry->allocator, entry->values, largerSize, 0);
+      CFIndex *largerValues = CFAllocatorReallocate(entry->allocator, entry->values, sizeof(CFIndex) * largerSize, 0);
       if (largerValues) {
         entry->valuesSize = largerSize;
         entry->values = largerValues;
@@ -100,12 +102,12 @@ inline bool __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef val
   return success;
 }
 
-inline bool __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) {
+inline bool __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFIndex key) {
   bool success = 0;
   if (entry) {
     if (entry->keysIndex == entry->keysSize) { // Reallocate more space
       CFIndex largerSize = entry->keysSize ? entry->keysSize << 1 : 1024;
-      CFTypeRef *largerKeys = CFAllocatorReallocate(entry->allocator, entry->keys, largerSize, 0);
+      CFIndex *largerKeys = CFAllocatorReallocate(entry->allocator, entry->keys, sizeof(CFIndex) * largerSize, 0);
       if (largerKeys) {
         entry->keysSize = largerSize;
         entry->keys = largerKeys;
@@ -117,6 +119,22 @@ inline bool __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) 
     }
   }
   return success;
+}
+
+inline CFTypeRef *__JSONStackEntryCreateValues(__JSONStackEntryRef entry, CFTypeRef *elements) {
+  CFTypeRef *values = CFAllocatorAllocate(entry->allocator, sizeof(CFTypeRef) * entry->valuesIndex, 0);
+  if (values)
+    for (CFIndex i = 0; i < entry->valuesIndex; i++)
+      values[i] = elements[entry->values[i]];
+  return values;
+}
+
+inline CFTypeRef *__JSONStackEntryCreateKeys(__JSONStackEntryRef entry, CFTypeRef *elements) {
+  CFTypeRef *keys = CFAllocatorAllocate(entry->allocator, sizeof(CFTypeRef) * entry->keysIndex, 0);
+  if (keys)
+    for (CFIndex i = 0; i < entry->keysIndex; i++)
+      keys[i] = elements[entry->keys[i]];
+  return keys;
 }
 
 inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex initialSize) {
@@ -137,6 +155,8 @@ inline CFIndex __JSONStackRelease(__JSONStackRef stack) {
   if (stack) {
     if ((retainCount = --stack->retainCount) == 0) {
       CFAllocatorRef allocator = stack->allocator;
+      while (stack->index-- > 0)
+        __JSONStackEntryRelease(stack->stack[stack->index]);
       if (stack->stack)
         CFAllocatorDeallocate(allocator, stack->stack);
       if (allocator)
@@ -160,7 +180,7 @@ inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
     // Do we need more space? Reallocate to 2 * current size.
     if (stack->index == stack->size) {
       CFIndex largerSize = stack->size ? stack->size << 1 : 1024;
-      __JSONStackEntryRef *largerStack = CFAllocatorReallocate(stack->allocator, stack->stack, largerSize, 0);
+      __JSONStackEntryRef *largerStack = CFAllocatorReallocate(stack->allocator, stack->stack, sizeof(__JSONStackEntryRef) * largerSize, 0);
       if (largerStack) {
         stack->size = largerSize;
         stack->stack = largerStack;
@@ -174,10 +194,10 @@ inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
   return success;
 }
 
+// The caller is responsible for releasing returned __JSONStackEntryRef
 inline __JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
   __JSONStackEntryRef entry = NULL;
   if (stack) {
-    // TODO: __JSONStackEntryRelease(stack->stack[stack->index])
     if (--stack->index >= 0) {
       entry = stack->stack[stack->index];
     } else {
@@ -187,61 +207,36 @@ inline __JSONStackEntryRef __JSONStackPop(__JSONStackRef stack) {
   return entry;
 }
 
-inline bool __JSONStackAppendValueAtTop(__JSONStackRef stack, CFTypeRef value) {
-  bool success = 0;
-  if (stack) {
-    __JSONStackEntryRef entry = __JSONStackGetTop(stack);
-    if (entry) {
-      __JSONStackEntryAppendValue(entry, value);
-      success = 1;
-    }
-  }
-  return success;
+inline bool __JSONStackAppendValueAtTop(__JSONStackRef stack, CFIndex value) {
+  return __JSONStackEntryAppendValue(__JSONStackGetTop(stack), value);
 }
 
-inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFTypeRef key) {
-  bool success = 0;
-  if (stack) {
-    __JSONStackEntryRef entry = __JSONStackGetTop(stack);
-    if (entry) {
-      __JSONStackEntryAppendKey(entry, key);
-      success = 1;
-    }
-  }
-  return success;
+inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFIndex key) {
+  return __JSONStackEntryAppendKey(__JSONStackGetTop(stack), key);
 }
 
 #pragma Parser callbacks
 
 inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
-  CFArrayAppendValue(json->elements, string);
-  __JSONStackAppendValueAtTop(json->stack, string);
-  CFRelease(string);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
 }
 
 inline int __JSONParserAppendNull(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFArrayAppendValue(json->elements, kCFNull);
-  __JSONStackAppendValueAtTop(json->stack, kCFNull);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, kCFNull));
 }
 
 inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFBooleanRef boolean = value ? kCFBooleanTrue : kCFBooleanFalse;
-  CFArrayAppendValue(json->elements, boolean);
-  __JSONStackAppendValueAtTop(json->stack, boolean);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, value ? kCFBooleanTrue : kCFBooleanFalse));
 }
 
 inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
   CFNumberRef number = NULL;
 
-  // TODO: anybody how to do it properly?
+  // TODO: How to do it better? Anybody?
   bool looksLikeFloat = 0;
   for (int i = 0; i < length; i++)
     if (value[i] == '.' || value[i] == 'e' || value[i] == 'E')
@@ -255,83 +250,77 @@ inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, u
     number = CFNumberCreate(json->allocator, kCFNumberLongLongType, &value_);
   }
   
-  CFArrayAppendValue(json->elements, number);
-  __JSONStackAppendValueAtTop(json->stack, number);
-  CFRelease(number);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, number));
 }
 
 inline int __JSONParserAppendNumberWithLong(void *context, long value) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFNumberRef number = CFNumberCreate(json->allocator, kCFNumberLongType, &value);
-  CFArrayAppendValue(json->elements, number);
-  __JSONStackAppendValueAtTop(json->stack, number);
-  CFRelease(number);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFNumberCreate(json->allocator, kCFNumberLongType, &value)));
 }
 
 inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFNumberRef number = CFNumberCreate(json->allocator, kCFNumberDoubleType, &value);
-  CFArrayAppendValue(json->elements, number);
-  __JSONStackAppendValueAtTop(json->stack, number);
-  CFRelease(number);
-  return 1;
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFNumberCreate(json->allocator, kCFNumberDoubleType, &value)));
 }
 
 inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   CoreJSONRef json = (CoreJSONRef)context;
-  CFStringRef string = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
-  CFArrayAppendValue(json->elements, string);
-  __JSONStackAppendKeyAtTop(json->stack, string);
-  CFRelease(string);
-  return 1;
+  return __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppend(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
 }
 
 inline int __JSONParserAppendMapStart(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   
-  // Placeholder for the CFDictionaryRef which will come later
-  CFMutableDictionaryRef dictionary = CFDictionaryCreateMutable(json->allocator, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-  CFArrayAppendValue(json->elements, dictionary);
-  __JSONStackAppendValueAtTop(json->stack, dictionary);
-  CFRelease(dictionary);
+  // Placeholder for the CFDictionaryRef which will be set when we get map end token
+  CFIndex index = __JSONElementsAppend(json, kCFNull);
   
-  // New container to the stack
-  __JSONStackPush(json->stack, __JSONStackEntryCreate(json->allocator, CFArrayGetCount(json->elements) - 1, 1024, 1024));
+  // Add element to the parent container
+  __JSONStackAppendValueAtTop(json->stack, index);
   
+  // Push this element as the new container
+  __JSONStackEntryRef entry = __JSONStackEntryCreate(json->allocator, index, 1024, 1024);
+  __JSONStackPush(json->stack, entry);
+  __JSONStackEntryRelease(entry);
   return 1;
 }
 
 inline int __JSONParserAppendMapEnd(void *context) {
+  int success = 0;
   CoreJSONRef json = (CoreJSONRef)context;
   __JSONStackEntryRef entry = __JSONStackPop(json->stack);
-  
-  // TODO: Optimize creating dict
-  // CFDictionaryRef dictionary = CFDictionaryCreate(json->allocator, entry->keys, entry->values, entry->valuesIndex, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-  // CFArraySetValueAtIndex(json->elements, entry->index, dictionary);
-  
-  CFMutableDictionaryRef d = (CFMutableDictionaryRef)CFArrayGetValueAtIndex(json->elements, entry->index);
-  for (int i = 0; i < entry->keysIndex; i++)
-    CFDictionaryAddValue(d, entry->keys[i], entry->values[i]);
-  
-  __JSONStackEntryRelease(entry);
-  return 1;
+  if (entry) {
+    if (entry->keysIndex == entry->valuesIndex) {
+      CFTypeRef *keys = __JSONStackEntryCreateKeys(entry, json->elements);
+      if (keys) {
+        CFTypeRef *values = __JSONStackEntryCreateValues(entry, json->elements);
+        if (values) {
+          json->elements[entry->index] = CFDictionaryCreate(json->allocator, keys, values, entry->keysIndex, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+          CFAllocatorDeallocate(entry->allocator, values);
+          success = 1;
+        }
+        CFAllocatorDeallocate(entry->allocator, keys);
+      }
+    } else {
+      // TODO: The number of keys and values does not match
+    }
+    __JSONStackEntryRelease(entry);
+  } else {
+    // TODO: Container on the stack can't be NULL (too deep?)
+  }
+  return success;
 }
 
 inline int __JSONParserAppendArrayStart(void *context) {
   CoreJSONRef json = (CoreJSONRef)context;
   
-  // Let's save this space in elements for the array. When we
-  // reach the end of the array, we'll create one in this place.
-  CFMutableArrayRef array = CFArrayCreateMutable(json->allocator, 0, &kCFTypeArrayCallBacks);
-  CFArrayAppendValue(json->elements, array);
-  __JSONStackAppendValueAtTop(json->stack, array);
-  CFRelease(array);
+  // Placeholder for the CFArrayRef which will be set when we get array end token
+  CFIndex index = __JSONElementsAppend(json, kCFNull);
   
-  // Add the container to the stack. Container element is just
-  // 3-value array [container index in the elements array, 
-  __JSONStackEntryRef entry = __JSONStackEntryCreate(json->allocator, CFArrayGetCount(json->elements) - 1, 1024, 0);
+  // Add element to the parent container
+  __JSONStackAppendValueAtTop(json->stack, index);
+  
+  // Push this element as the new container
+  __JSONStackEntryRef entry = __JSONStackEntryCreate(json->allocator, index, 1024, 0);
   __JSONStackPush(json->stack, entry);
   __JSONStackEntryRelease(entry);
   
@@ -339,17 +328,34 @@ inline int __JSONParserAppendArrayStart(void *context) {
 }
 
 inline int __JSONParserAppendArrayEnd(void *context) {
+  int success = 0;
   CoreJSONRef json = (CoreJSONRef)context;
   __JSONStackEntryRef entry = __JSONStackPop(json->stack);
-  
-  CFArrayRef array = CFArrayCreate(json->allocator, entry->values, entry->valuesIndex, &kCFTypeArrayCallBacks);
-  CFMutableArrayRef a2 = (CFMutableArrayRef)CFArrayGetValueAtIndex(json->elements, entry->index);
-  CFArrayAppendArray(a2, array, CFRangeMake(0, CFArrayGetCount(array)));
-  //CFArraySetValueAtIndex(json->elements, entry->index, array);
-  CFRelease(array);
-  
-  __JSONStackEntryRelease(entry);
-  return 1;
+  if (entry) {
+    CFTypeRef *values = __JSONStackEntryCreateValues(entry, json->elements); // TODO: change allocation to here.
+    if (values) {
+      json->elements[entry->index] = CFArrayCreate(json->allocator, values, entry->valuesIndex, &kCFTypeArrayCallBacks);
+      CFAllocatorDeallocate(entry->allocator, values);
+      success = 1;
+    }
+    __JSONStackEntryRelease(entry);
+  }
+  return success;
+}
+
+inline CFIndex __JSONElementsAppend(CoreJSONRef json, CFTypeRef value) {
+  CFIndex index = json->elementsIndex;
+  if (json->elementsIndex == json->elementsSize) { // Reallocate
+    CFIndex largerSize = json->elementsSize ? json->elementsSize << 1 : 1024;
+    CFTypeRef *largerElements = CFAllocatorReallocate(json->allocator, json->elements, sizeof(CFTypeRef) * largerSize, 0);
+    if (largerElements) {
+      json->elementsSize = largerSize;
+      json->elements = largerElements;
+    }
+  }
+  if (json->elementsIndex < json->elementsSize)
+    json->elements[json->elementsIndex++] = value;
+  return index;
 }
 
 #pragma Public API
@@ -384,7 +390,10 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     json->yajlGeneratorConfig.indentString = "  ";
     json->yajlGenerator = yajl_gen_alloc(&json->yajlGeneratorConfig, NULL);
     
-    json->elements = CFArrayCreateMutable(json->allocator, 0, &kCFTypeArrayCallBacks);
+    json->elementsIndex = 0;
+    json->elementsSize = 1024;
+    json->elements = CFAllocatorAllocate(json->allocator, sizeof(CFTypeRef) * json->elementsSize, 0); // TODO: Check if allocated
+
     json->stack = __JSONStackCreate(json->allocator, CORE_JSON_STACK_MAX_DEPTH);
   }
   return json;
@@ -399,7 +408,11 @@ inline CFIndex JSONRelease(CoreJSONRef json) {
       yajl_free(json->yajlParser);
       // TODO: release generator
       
-      CFRelease(json->elements);
+      // TODO: Check if json->elements is allocated first
+      while (json->elementsIndex-- > 0)
+        CFRelease(json->elements[json->elementsIndex]);
+      CFAllocatorDeallocate(allocator, json->elements);
+      
       __JSONStackRelease(json->stack);
       CFAllocatorDeallocate(allocator, json);
       
@@ -412,8 +425,8 @@ inline CFIndex JSONRelease(CoreJSONRef json) {
 
 inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   
-  // Let's make sure we've got a clean plate first
-  CFArrayRemoveAllValues(json->elements);
+  // TODO: Let's make sure we've got a clean plate first
+  //CFArrayRemoveAllValues(json->elements);
   
   __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
   if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
@@ -436,5 +449,5 @@ inline CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef st
 }
 
 inline CFTypeRef JSONGetObject(CoreJSONRef json) {
-  return CFArrayGetValueAtIndex(json->elements, 0);
+  return json->elements[0];
 }

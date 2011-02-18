@@ -4,14 +4,14 @@ CoreJSON is iOS, OSX (will also work on Linux) Core Foundation based fast parser
 
 Comparison with other JSON frameworks:
 
-| Framework            | Read (min) | Read (mean) | Read (max)  
-|:---------------------|-----------:|------------:|-----------:
-| JSONKit              |      3.978 |       4.032 |     4.829
-| CoreJSON             |      6.789 |       7.617 |     7.750
-| Apple JSON (private) |      7.609 |       7.643 |     7.840
-| YAJL-objc            |      7.158 |       8.033 |    43.361
-| JSON Framework       |      9.737 |       9.803 |    10.181
-| TouchJSON            |     13.800 |      13.883 |    14.363
+| Framework            | What    | Min     | Mean    | Max 
+|:---------------------|--------:|--------:|--------:|--------
+|              JSONKit |    read |   3.960 |   4.963 |  71.561
+|             CoreJSON |    read |   5.356 |   5.708 |   5.881
+|           Apple JSON |    read |   7.245 |   7.568 |  13.036
+|                 YAJL |    read |   7.693 |   7.756 |   8.530
+|       JSON Framework |    read |   9.167 |   9.336 |  11.189
+|            TouchJSON |    read |  13.231 |  13.485 |  17.559
 
 _Tests performed on iPad Simulator with https://github.com/samsoffes/json-benchmarks_
 

@@ -6,9 +6,9 @@
 //                http://github.com/mirek/CoreJSON
 //
 
-#import <CoreFoundation/CoreFoundation.h>
-#import <yajl/yajl_parse.h>
-#import <yajl/yajl_gen.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include "yajl/yajl_parse.h"
+#include "yajl/yajl_gen.h"
 
 #define CORE_JSON_STACK_MAX_DEPTH 1024
 
@@ -68,22 +68,24 @@ typedef struct {
   
   CFIndex        index;
   
-  CFTypeRef     *values;
+  CFIndex       *values;
   CFIndex        valuesIndex;
   CFIndex        valuesSize;
   
-  CFTypeRef     *keys;
+  CFIndex       *keys;
   CFIndex        keysIndex;
   CFIndex        keysSize;
 } __JSONStackEntry;
 
 typedef __JSONStackEntry *__JSONStackEntryRef;
 
-__JSONStackEntryRef __JSONStackEntryCreate      (CFAllocatorRef allocator, CFIndex index, CFIndex valuesInitialSize, CFIndex keysInitialSize);
-__JSONStackEntryRef __JSONStackEntryRetain      (__JSONStackEntryRef entry);
-CFIndex             __JSONStackEntryRelease     (__JSONStackEntryRef entry);
-bool                __JSONStackEntryAppendValue (__JSONStackEntryRef entry, CFTypeRef value);
-bool                __JSONStackEntryAppendKey   (__JSONStackEntryRef entry, CFTypeRef key);
+__JSONStackEntryRef __JSONStackEntryCreate       (CFAllocatorRef allocator, CFIndex index, CFIndex valuesInitialSize, CFIndex keysInitialSize);
+__JSONStackEntryRef __JSONStackEntryRetain       (__JSONStackEntryRef entry);
+CFIndex             __JSONStackEntryRelease      (__JSONStackEntryRef entry);
+bool                __JSONStackEntryAppendValue  (__JSONStackEntryRef entry, CFIndex value);
+bool                __JSONStackEntryAppendKey    (__JSONStackEntryRef entry, CFIndex key);
+CFTypeRef          *__JSONStackEntryCreateValues (__JSONStackEntryRef entry, CFTypeRef *elements);
+CFTypeRef          *__JSONStackEntryCreateKeys   (__JSONStackEntryRef entry, CFTypeRef *elements);
 
 typedef struct {
   CFAllocatorRef       allocator;
@@ -100,8 +102,8 @@ CFIndex             __JSONStackRelease          (__JSONStackRef stack);
 __JSONStackEntryRef __JSONStackGetTop           (__JSONStackRef stack);
 bool                __JSONStackPush             (__JSONStackRef stack, __JSONStackEntryRef entry);
 __JSONStackEntryRef __JSONStackPop              (__JSONStackRef stack);
-bool                __JSONStackAppendValueAtTop (__JSONStackRef stack, CFTypeRef value);
-bool                __JSONStackAppendKeyAtTop   (__JSONStackRef stack, CFTypeRef key);
+bool                __JSONStackAppendValueAtTop (__JSONStackRef stack, CFIndex value);
+bool                __JSONStackAppendKeyAtTop   (__JSONStackRef stack, CFIndex key);
 
 #pragma Internal callbacks for libyajl parser
 
@@ -117,27 +119,34 @@ int __JSONParserAppendMapEnd             (void *context);
 int __JSONParserAppendArrayStart         (void *context);
 int __JSONParserAppendArrayEnd           (void *context);
 
-#pragma Public API
-
 typedef struct {
   CFAllocatorRef     allocator;
   CFIndex            retainCount;
-  
+
   yajl_handle        yajlParser;
   yajl_parser_config yajlParserConfig;
   yajl_status        yajlParserStatus;
   yajl_callbacks     yajlParserCallbacks;
-  
+
   yajl_gen           yajlGenerator;
   yajl_gen_config    yajlGeneratorConfig;
   yajl_status        yajlGeneratorStatus;
-  
-  CFMutableArrayRef  elements;
+
+  CFIndex            elementsIndex;
+  CFIndex            elementsSize;
+  CFTypeRef         *elements;
+
   __JSONStackRef     stack;
   
 } CoreJSON;
 
 typedef CoreJSON *CoreJSONRef;
+
+#pragma Internal elements array support
+
+CFIndex __JSONElementsAppend(CoreJSONRef json, CFTypeRef value);
+
+#pragma Public API
 
 extern CoreJSONRef JSONCreate           (CFAllocatorRef allocator);
 extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef string);
