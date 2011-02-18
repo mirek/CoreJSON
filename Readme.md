@@ -5,7 +5,7 @@ CoreJSON is iOS, OSX (will also work on Linux) Core Foundation based fast parser
 Comparison with other JSON frameworks:
 
 | Framework            | What    | Min     | Mean    | Max 
-|:---------------------|--------:|--------:|--------:|--------
+|:---------------------|--------:|--------:|--------:|--------:
 |              JSONKit |    read |   3.960 |   4.963 |  71.561
 |             CoreJSON |    read |   5.356 |   5.708 |   5.881
 |           Apple JSON |    read |   7.245 |   7.568 |  13.036
