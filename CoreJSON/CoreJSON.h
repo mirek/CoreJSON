@@ -144,4 +144,3 @@ extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef s
 extern void        JSONParseWithString  (CoreJSONRef    json,      CFStringRef string);
 extern CFTypeRef   JSONGetObject        (CoreJSONRef    json);
 extern CFIndex     JSONRelease          (CoreJSONRef    json);
-inline CoreJSONRef JSONReleaseRef       (CoreJSONRef   *json);

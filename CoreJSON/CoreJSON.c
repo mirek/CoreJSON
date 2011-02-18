@@ -410,12 +410,6 @@ inline CFIndex JSONRelease(CoreJSONRef json) {
   return retainCount;
 }
 
-inline CoreJSONRef JSONReleaseRef(CoreJSONRef *json) {
-  if (0 == JSONRelease(*json))
-    json = NULL;
-  return *json;
-}
-
 inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   
   // Let's make sure we've got a clean plate first
