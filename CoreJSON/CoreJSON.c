@@ -42,20 +42,20 @@ inline void __JSONUTF8StringDestroy(__JSONUTF8String utf8String) {
 
 #pragma Internal stack
 
-inline __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIndex index, CFIndex valuesLength, CFIndex keysLength) {
+inline __JSONStackEntryRef __JSONStackEntryCreate(CFAllocatorRef allocator, CFIndex index, CFIndex valuesInitialSize, CFIndex keysInitialSize) {
   __JSONStackEntryRef entry = CFAllocatorAllocate(allocator, sizeof(__JSONStackEntry), 0);
   if (entry) {
-    entry->allocator = allocator;
+    entry->allocator = allocator ? CFRetain(allocator) : NULL;
     entry->retainCount = 1;
     entry->index = index;
     entry->valuesIndex = 0;
-    if ((entry->valuesLength = valuesLength))
-      entry->values = CFAllocatorAllocate(entry->allocator, valuesLength, 0);
+    if ((entry->valuesSize = valuesInitialSize))
+      entry->values = CFAllocatorAllocate(entry->allocator, entry->valuesSize, 0);
     else
       entry->values = NULL;
     entry->keysIndex = 0;
-    if ((entry->keysLength = keysLength))
-      entry->keys = CFAllocatorAllocate(entry->allocator, keysLength, 0);
+    if ((entry->keysSize = keysInitialSize))
+      entry->keys = CFAllocatorAllocate(entry->allocator, entry->keysSize, 0);
     else
       entry->keys = NULL;
   }
@@ -68,32 +68,63 @@ inline __JSONStackEntryRef __JSONStackEntryRetain(__JSONStackEntryRef entry) {
 }
 
 inline CFIndex __JSONStackEntryRelease(__JSONStackEntryRef entry) {
-  // TODO: Deallocate stack entry arrays
-  return --entry->retainCount;
+  if (--entry->retainCount == 0) {
+    CFAllocatorRef allocator = entry->allocator;
+    if (entry->values)
+      CFAllocatorDeallocate(allocator, entry->values);
+    if (entry->keys)
+      CFAllocatorDeallocate(allocator, entry->keys);
+    CFAllocatorDeallocate(allocator, entry);
+    if (allocator)
+      CFRelease(allocator);
+  }
+  return entry->retainCount;
 }
 
-inline __JSONStackEntryRef __JSONStackEntryReleaseRef(__JSONStackEntryRef *entry) {
-  if (0 == __JSONStackEntryRelease(*entry))
-    entry = NULL;
-  return *entry;
+inline bool __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef value) {
+  bool success = 0;
+  if (entry) {
+    if (entry->valuesIndex == entry->valuesSize) { // Reallocate more space
+      CFIndex largerSize = entry->valuesSize ? entry->valuesSize << 1 : 1024;
+      CFTypeRef *largerValues = CFAllocatorReallocate(entry->allocator, entry->values, largerSize, 0);
+      if (largerValues) {
+        entry->valuesSize = largerSize;
+        entry->values = largerValues;
+      }
+    }
+    if (entry->valuesIndex < entry->valuesSize) {
+      entry->values[entry->valuesIndex++] = value;
+      success = 1;
+    }
+  }
+  return success;
 }
 
-inline void __JSONStackEntryAppendValue(__JSONStackEntryRef entry, CFTypeRef value) {
-  // TODO: Reallocate when out of bounds
-  entry->values[entry->valuesIndex++] = value;
+inline bool __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) {
+  bool success = 0;
+  if (entry) {
+    if (entry->keysIndex == entry->keysSize) { // Reallocate more space
+      CFIndex largerSize = entry->keysSize ? entry->keysSize << 1 : 1024;
+      CFTypeRef *largerKeys = CFAllocatorReallocate(entry->allocator, entry->keys, largerSize, 0);
+      if (largerKeys) {
+        entry->keysSize = largerSize;
+        entry->keys = largerKeys;
+      }
+    }
+    if (entry->keysIndex < entry->keysSize) {
+      entry->keys[entry->keysIndex++] = key;
+      success = 1;
+    }
+  }
+  return success;
 }
 
-inline void __JSONStackEntryAppendKey(__JSONStackEntryRef entry, CFTypeRef key) {
-  // TODO: Reallocate when out of bounds
-  entry->keys[entry->keysIndex++] = key;
-}
-
-inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDepth) {
+inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex initialSize) {
   __JSONStackRef stack = CFAllocatorAllocate(allocator, sizeof(__JSONStack), 0);
   if (stack) {
-    stack->allocator = allocator;
+    stack->allocator = allocator ? CFRetain(allocator) : NULL;
     stack->retainCount = 1;
-    stack->size = maxDepth;
+    stack->size = initialSize;
     stack->index = 0;
     stack->stack = CFAllocatorAllocate(stack->allocator, sizeof(__JSONStackEntryRef) * stack->size, 0);
     memset(stack->stack, 0, sizeof(__JSONStackEntryRef) * stack->size);
@@ -102,8 +133,17 @@ inline __JSONStackRef __JSONStackCreate(CFAllocatorRef allocator, CFIndex maxDep
 }
 
 inline CFIndex __JSONStackRelease(__JSONStackRef stack) {
-  // TODO: Stack deallocator
-  return --stack->retainCount;
+  CFIndex retainCount = 0;
+  if (stack) {
+    if ((retainCount = --stack->retainCount) == 0) {
+      CFAllocatorRef allocator = stack->allocator;
+      if (stack->stack)
+        CFAllocatorDeallocate(allocator, stack->stack);
+      if (allocator)
+        CFRelease(allocator);
+    }
+  }
+  return retainCount;
 }
 
 inline __JSONStackEntryRef __JSONStackGetTop(__JSONStackRef stack) {
@@ -116,11 +156,19 @@ inline __JSONStackEntryRef __JSONStackGetTop(__JSONStackRef stack) {
 inline bool __JSONStackPush(__JSONStackRef stack, __JSONStackEntryRef entry) {
   bool success = 0;
   if (stack && entry) {
+    
+    // Do we need more space? Reallocate to 2 * current size.
+    if (stack->index == stack->size) {
+      CFIndex largerSize = stack->size ? stack->size << 1 : 1024;
+      __JSONStackEntryRef *largerStack = CFAllocatorReallocate(stack->allocator, stack->stack, largerSize, 0);
+      if (largerStack) {
+        stack->size = largerSize;
+        stack->stack = largerStack;
+      }
+    }
     if (stack->index < stack->size) {
       stack->stack[stack->index++] = __JSONStackEntryRetain(entry);
       success = 1;
-    } else {
-      // TODO: Out of bounds, reallocate more space
     }
   }
   return success;
@@ -309,7 +357,7 @@ inline int __JSONParserAppendArrayEnd(void *context) {
 inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
   CoreJSONRef json = CFAllocatorAllocate(allocator, sizeof(CoreJSON), 0);
   if (json) {
-    json->allocator = allocator;
+    json->allocator = allocator ? CFRetain(allocator) : NULL;
     
     json->yajlParserCallbacks.yajl_null        = __JSONParserAppendNull;
     json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendBooleanWithInteger;
@@ -343,20 +391,20 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
 }
 
 inline CFIndex JSONRelease(CoreJSONRef json) {
-  CFIndex retainCount = -1;
+  CFIndex retainCount = 0;
   if (json) {
-    if (json->retainCount > 0) {
-      if ((retainCount = --json->retainCount) == 0) {
-        CFAllocatorRef allocator = json->allocator;
-        
-        yajl_free(json->yajlParser);
-//        yajl_free(json->yajlGenerator);
-        
-        CFRelease(json->elements);
-        __JSONStackRelease(json->stack);
-
-        CFAllocatorDeallocate(allocator, json);
-      }
+    if ((retainCount = --json->retainCount) == 0) {
+      CFAllocatorRef allocator = json->allocator;
+      
+      yajl_free(json->yajlParser);
+      // TODO: release generator
+      
+      CFRelease(json->elements);
+      __JSONStackRelease(json->stack);
+      CFAllocatorDeallocate(allocator, json);
+      
+      if (allocator)
+        CFRelease(allocator);
     }
   }
   return retainCount;

@@ -70,21 +70,20 @@ typedef struct {
   
   CFTypeRef     *values;
   CFIndex        valuesIndex;
-  CFIndex        valuesLength;
+  CFIndex        valuesSize;
   
   CFTypeRef     *keys;
   CFIndex        keysIndex;
-  CFIndex        keysLength;
+  CFIndex        keysSize;
 } __JSONStackEntry;
 
 typedef __JSONStackEntry *__JSONStackEntryRef;
 
-__JSONStackEntryRef __JSONStackEntryCreate      (CFAllocatorRef allocator, CFIndex index, CFIndex valuesLength, CFIndex keysLength);
+__JSONStackEntryRef __JSONStackEntryCreate      (CFAllocatorRef allocator, CFIndex index, CFIndex valuesInitialSize, CFIndex keysInitialSize);
 __JSONStackEntryRef __JSONStackEntryRetain      (__JSONStackEntryRef entry);
 CFIndex             __JSONStackEntryRelease     (__JSONStackEntryRef entry);
-__JSONStackEntryRef __JSONStackEntryReleaseRef  (__JSONStackEntryRef *entry);
-void                __JSONStackEntryAppendValue (__JSONStackEntryRef entry, CFTypeRef value);
-void                __JSONStackEntryAppendKey   (__JSONStackEntryRef entry, CFTypeRef key);
+bool                __JSONStackEntryAppendValue (__JSONStackEntryRef entry, CFTypeRef value);
+bool                __JSONStackEntryAppendKey   (__JSONStackEntryRef entry, CFTypeRef key);
 
 typedef struct {
   CFAllocatorRef       allocator;
@@ -96,7 +95,7 @@ typedef struct {
 
 typedef __JSONStack *__JSONStackRef;
 
-__JSONStackRef      __JSONStackCreate           (CFAllocatorRef allocator, CFIndex maxDepth);
+__JSONStackRef      __JSONStackCreate           (CFAllocatorRef allocator, CFIndex initialSize);
 CFIndex             __JSONStackRelease          (__JSONStackRef stack);
 __JSONStackEntryRef __JSONStackGetTop           (__JSONStackRef stack);
 bool                __JSONStackPush             (__JSONStackRef stack, __JSONStackEntryRef entry);

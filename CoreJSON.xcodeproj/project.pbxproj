@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB7354C2130E688300D6C2D8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
 		EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB81054130BEC3E00CF5EF8 /* CoreJSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreJSON-Info.plist"; sourceTree = "<group>"; };
 		EBB81056130BEC3E00CF5EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -78,6 +79,7 @@
 				EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */,
 				EBB8104B130BEC3E00CF5EF8 /* Frameworks */,
 				EBB8104A130BEC3E00CF5EF8 /* Products */,
+				EB7354C2130E688300D6C2D8 /* Readme.md */,
 			);
 			sourceTree = "<group>";
 		};
