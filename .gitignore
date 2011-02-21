@@ -1,6 +1,6 @@
 .DS_Store
 build
-CoreJSON.xcodeproj/project.xcworkspace/xcuserdata
-CoreJSON.xcodeproj/xcuserdata
-CoreJSON.xcodeproj/*.mode1v3
-CoreJSON.xcodeproj/*.pbxuser
+*.xcodeproj/project.xcworkspace/xcuserdata
+*.xcodeproj/xcuserdata
+*.xcodeproj/*.mode1v3
+*.xcodeproj/*.pbxuser

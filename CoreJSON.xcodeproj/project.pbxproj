@@ -7,8 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EBB1ADE01312A9DE006476A7 /* CoreJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */; };
+		EBB1ADE21312A9ED006476A7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */; };
+		EBB1ADE41312AA16006476A7 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EBB1AE301312B1E9006476A7 /* libYAJL (iOS).a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB1AE2F1312B1E9006476A7 /* libYAJL (iOS).a */; };
+		EBB1AE7F1312B683006476A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB1AE7E1312B683006476A7 /* Cocoa.framework */; };
 		EBB81057130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81055130BEC3E00CF5EF8 /* InfoPlist.strings */; };
-		EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */; };
+		EBB81062130BEC3E00CF5EF8 /* CoreJSON (OSX).framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */; };
 		EBB81068130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */; };
 		EBB8106B130BEC3E00CF5EF8 /* CoreJSONTests.h in Resources */ = {isa = PBXBuildFile; fileRef = EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */; };
 		EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */; };
@@ -17,10 +22,23 @@
 		EBCB75E4130C0E8D009F0B55 /* libyajl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */; };
 		EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 		EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
-		EBCB75EB130C112A009F0B55 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75EA130C112A009F0B55 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EBB1AE2D1312B1C3006476A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBB1ADF01312AD72006476A7;
+			remoteInfo = "YAJL (iOS)";
+		};
+		EBB1AE5C1312B33C006476A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBB1AE491312B33C006476A7;
+			remoteInfo = YAJL;
+		};
 		EBB81060130BEC3E00CF5EF8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EBB8103F130BEC3E00CF5EF8 /* Project object */;
@@ -32,7 +50,12 @@
 
 /* Begin PBXFileReference section */
 		EB7354C2130E688300D6C2D8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
-		EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCoreJSON (iOS).a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.2.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = YAJL.xcodeproj; sourceTree = "<group>"; };
+		EBB1AE2F1312B1E9006476A7 /* libYAJL (iOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libYAJL (iOS).a"; sourceTree = SOURCE_ROOT; };
+		EBB1AE7E1312B683006476A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CoreJSON (OSX).framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB81054130BEC3E00CF5EF8 /* CoreJSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreJSON-Info.plist"; sourceTree = "<group>"; };
 		EBB81056130BEC3E00CF5EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EBB81058130BEC3E00CF5EF8 /* CoreJSON-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreJSON-Prefix.pch"; sourceTree = "<group>"; };
@@ -46,10 +69,18 @@
 		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
 		EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libyajl.dylib; path = usr/local/lib/libyajl.dylib; sourceTree = SDKROOT; };
 		EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		EBCB75EA130C112A009F0B55 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EBB1ADD51312A7B6006476A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB1AE301312B1E9006476A7 /* libYAJL (iOS).a in Frameworks */,
+				EBB1ADE21312A9ED006476A7 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBB81045130BEC3E00CF5EF8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,8 +94,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBCB75EB130C112A009F0B55 /* Foundation.framework in Frameworks */,
-				EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */,
+				EBB1AE7F1312B683006476A7 /* Cocoa.framework in Frameworks */,
+				EBB81062130BEC3E00CF5EF8 /* CoreJSON (OSX).framework in Frameworks */,
 				EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,9 +103,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EBB1ADE31312A9F5006476A7 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EBB1AE2F1312B1E9006476A7 /* libYAJL (iOS).a */,
+				EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		EBB1AE271312B1C3006476A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EBB1AE2E1312B1C3006476A7 /* libYAJL (iOS).a */,
+				EBB1AE5D1312B33C006476A7 /* YAJL.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EBB1AE311312B22A006476A7 /* OSX */ = {
+			isa = PBXGroup;
+			children = (
+				EBB1AE7E1312B683006476A7 /* Cocoa.framework */,
+				EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */,
+				EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */,
+			);
+			name = OSX;
+			sourceTree = "<group>";
+		};
 		EBB8103D130BEC3E00CF5EF8 = {
 			isa = PBXGroup;
 			children = (
+				EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */,
 				EBB81052130BEC3E00CF5EF8 /* CoreJSON */,
 				EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */,
 				EBB8104B130BEC3E00CF5EF8 /* Frameworks */,
@@ -86,8 +146,9 @@
 		EBB8104A130BEC3E00CF5EF8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */,
+				EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */,
 				EBB8105E130BEC3E00CF5EF8 /* CoreJSONTests.octest */,
+				EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +156,8 @@
 		EBB8104B130BEC3E00CF5EF8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */,
-				EBCB75EA130C112A009F0B55 /* Foundation.framework */,
-				EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */,
+				EBB1ADE31312A9F5006476A7 /* iOS */,
+				EBB1AE311312B22A006476A7 /* OSX */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,6 +205,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EBB1ADD61312A7B6006476A7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB1ADE41312AA16006476A7 /* CoreJSON.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBB81046130BEC3E00CF5EF8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -156,9 +224,26 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		EBB81048130BEC3E00CF5EF8 /* CoreJSON */ = {
+		EBB1ADD71312A7B6006476A7 /* CoreJSON (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */;
+			buildConfigurationList = EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON (iOS)" */;
+			buildPhases = (
+				EBB1ADD41312A7B6006476A7 /* Sources */,
+				EBB1ADD51312A7B6006476A7 /* Frameworks */,
+				EBB1ADD61312A7B6006476A7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CoreJSON (iOS)";
+			productName = CoreJSON;
+			productReference = EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON (OSX)" */;
 			buildPhases = (
 				EBB81044130BEC3E00CF5EF8 /* Sources */,
 				EBB81045130BEC3E00CF5EF8 /* Frameworks */,
@@ -169,9 +254,9 @@
 			);
 			dependencies = (
 			);
-			name = CoreJSON;
+			name = "CoreJSON (OSX)";
 			productName = CoreJSON;
-			productReference = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */;
+			productReference = EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */ = {
@@ -211,13 +296,37 @@
 			mainGroup = EBB8103D130BEC3E00CF5EF8;
 			productRefGroup = EBB8104A130BEC3E00CF5EF8 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = EBB1AE271312B1C3006476A7 /* Products */;
+					ProjectRef = EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				EBB81048130BEC3E00CF5EF8 /* CoreJSON */,
+				EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */,
 				EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */,
+				EBB1ADD71312A7B6006476A7 /* CoreJSON (iOS) */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		EBB1AE2E1312B1C3006476A7 /* libYAJL (iOS).a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libYAJL (iOS).a";
+			remoteRef = EBB1AE2D1312B1C3006476A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EBB1AE5D1312B33C006476A7 /* YAJL.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = YAJL.framework;
+			remoteRef = EBB1AE5C1312B33C006476A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		EBB81047130BEC3E00CF5EF8 /* Resources */ = {
@@ -256,6 +365,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EBB1ADD41312A7B6006476A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB1ADE01312A9DE006476A7 /* CoreJSON.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EBB81044130BEC3E00CF5EF8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -277,7 +394,7 @@
 /* Begin PBXTargetDependency section */
 		EBB81061130BEC3E00CF5EF8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EBB81048130BEC3E00CF5EF8 /* CoreJSON */;
+			target = EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */;
 			targetProxy = EBB81060130BEC3E00CF5EF8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -302,6 +419,56 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		EBB1ADDE1312A7B6006476A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/CoreJSON.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/YAJL/include\"";
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		EBB1ADDF1312A7B6006476A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/CoreJSON.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/YAJL/include\"";
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
 		EBB8106E130BEC3E00CF5EF8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -345,9 +512,9 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/YAJL/include\"";
 				INFOPLIST_FILE = "CoreJSON/CoreJSON-Info.plist";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -365,9 +532,9 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CoreJSON/CoreJSON-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/YAJL/include\"";
 				INFOPLIST_FILE = "CoreJSON/CoreJSON-Info.plist";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -418,6 +585,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB1ADDE1312A7B6006476A7 /* Debug */,
+				EBB1ADDF1312A7B6006476A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EBB81042130BEC3E00CF5EF8 /* Build configuration list for PBXProject "CoreJSON" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -427,7 +603,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */ = {
+		EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON (OSX)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EBB81071130BEC3E00CF5EF8 /* Debug */,
