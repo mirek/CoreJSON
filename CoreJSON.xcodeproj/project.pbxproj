@@ -19,7 +19,6 @@
 		EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */; };
 		EBB81078130BEC8C00CF5EF8 /* CoreJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */; };
 		EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; };
-		EBCB75E4130C0E8D009F0B55 /* libyajl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */; };
 		EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 		EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -67,8 +66,8 @@
 		EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreJSONTests.m; sourceTree = "<group>"; };
 		EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CoreJSON.c; sourceTree = "<group>"; };
 		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
-		EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libyajl.dylib; path = usr/local/lib/libyajl.dylib; sourceTree = SDKROOT; };
 		EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EBF450001312B931007C6F91 /* YAJL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = YAJL.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +85,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */,
-				EBCB75E4130C0E8D009F0B55 /* libyajl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,8 +122,8 @@
 		EBB1AE311312B22A006476A7 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				EBF450001312B931007C6F91 /* YAJL.framework */,
 				EBB1AE7E1312B683006476A7 /* Cocoa.framework */,
-				EBCB75E3130C0E8D009F0B55 /* libyajl.dylib */,
 				EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */,
 			);
 			name = OSX;
@@ -507,6 +505,10 @@
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -528,6 +530,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
