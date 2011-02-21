@@ -21,6 +21,7 @@
 		EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; };
 		EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 		EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
+		EBF450191312BAB2007C6F91 /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBF450181312BAB2007C6F91 /* YAJL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
 		EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		EBF450001312B931007C6F91 /* YAJL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = YAJL.framework; sourceTree = SOURCE_ROOT; };
+		EBF450181312BAB2007C6F91 /* YAJL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = YAJL.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBF450191312BAB2007C6F91 /* YAJL.framework in Frameworks */,
 				EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,6 +135,7 @@
 		EBB8103D130BEC3E00CF5EF8 = {
 			isa = PBXGroup;
 			children = (
+				EBF450181312BAB2007C6F91 /* YAJL.framework */,
 				EBB1AE261312B1C3006476A7 /* YAJL.xcodeproj */,
 				EBB81052130BEC3E00CF5EF8 /* CoreJSON */,
 				EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */,
