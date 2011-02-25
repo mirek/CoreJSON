@@ -21,6 +21,13 @@
   [super tearDown];
 }
 
+- (void) testGenerator {
+  
+  id object = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithLongLong: 9223372036854775807], @"key1", nil];
+  
+  NSLog(@"=====\nParsed:\n%@\n", JSONCreateString(NULL, object));
+}
+
 - (void) testSimpleStuff {
   {
     CoreJSONRef json = JSONCreateWithString(NULL, (CFStringRef)@"[1, 3, 5]");

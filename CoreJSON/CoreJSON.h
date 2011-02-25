@@ -7,8 +7,8 @@
 //
 
 #include <CoreFoundation/CoreFoundation.h>
-#include "yajl/yajl_parse.h"
-#include "yajl/yajl_gen.h"
+#include <yajl/yajl_parse.h>
+#include <yajl/yajl_gen.h>
 
 #define CORE_JSON_STACK_MAX_DEPTH 1024
 
@@ -153,3 +153,6 @@ extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef s
 extern void        JSONParseWithString  (CoreJSONRef    json,      CFStringRef string);
 extern CFTypeRef   JSONGetObject        (CoreJSONRef    json);
 extern CFIndex     JSONRelease          (CoreJSONRef    json);
+
+       void        __JSONGeneratorAppendValue (CFAllocatorRef allocator, yajl_gen *g, CFTypeRef value);
+extern CFStringRef   JSONCreateString         (CFAllocatorRef allocator, CFTypeRef value);

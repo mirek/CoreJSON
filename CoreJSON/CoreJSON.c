@@ -451,3 +451,77 @@ inline CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef st
 inline CFTypeRef JSONGetObject(CoreJSONRef json) {
   return json->elements[0];
 }
+
+inline void __JSONGeneratorAppendValue(CFAllocatorRef allocator, yajl_gen *g, CFTypeRef value) {
+  if (value) {
+    CFTypeID typeID = CFGetTypeID(value);
+    // TODO:
+    //  CFAttributedString
+    //  CFBag
+    //  CFBinaryHeap
+    //  CFBitVector
+    //  CFBoolean
+    //  CFData
+    //  CFDate
+    //  CFNull
+    //  CFSet
+    //  CFTree
+    //  CFURL
+    //  CFUUID
+    if (typeID == CFStringGetTypeID()) {
+      __JSONUTF8String utf8 = __JSONUTF8StringMake(allocator, value);
+      yajl_gen_string(*g, __JSONUTF8StringGetBuffer(utf8), (unsigned int)strlen((const char *)__JSONUTF8StringGetBuffer(utf8))); 
+      __JSONUTF8StringDestroy(utf8);
+    } else if (typeID == CFNumberGetTypeID()) {
+      if (CFNumberIsFloatType(value)) {
+        double value_ = 0.0;
+        CFNumberGetValue(value, kCFNumberDoubleType, &value_);
+        yajl_gen_double(*g, value_);
+      } else {
+        long long value_ = 0;
+        CFNumberGetValue(value, kCFNumberLongLongType, &value_);
+        char buffer[22];
+        int length = sprintf(buffer, "%lld", value_);
+        yajl_gen_number(*g, buffer, length);
+      }
+    } else if (typeID == CFArrayGetTypeID()) {
+      yajl_gen_array_open(*g);
+      CFIndex n = CFArrayGetCount(value);
+      CFTypeRef *values = CFAllocatorAllocate(allocator, sizeof(CFTypeRef) * n, 0);
+      CFArrayGetValues(value, CFRangeMake(0, n - 1), values);
+      for (CFIndex i = 0; i < n; i++)
+        __JSONGeneratorAppendValue(allocator, g, values[i]);
+      CFAllocatorDeallocate(allocator, values);
+      yajl_gen_array_close(*g);
+    } else if (typeID == CFDictionaryGetTypeID()) {
+      yajl_gen_map_open(*g);
+      CFIndex n = CFDictionaryGetCount(value);
+      CFTypeRef *keys = CFAllocatorAllocate(allocator, sizeof(CFTypeRef) * n, 0);
+      CFTypeRef *values = CFAllocatorAllocate(allocator, sizeof(CFTypeRef) * n, 0);
+      CFDictionaryGetKeysAndValues(value, keys, values);
+      for (CFIndex i = 0; i < n; i++) {
+        __JSONGeneratorAppendValue(allocator, g, keys[i]); // TODO: append as string
+        __JSONGeneratorAppendValue(allocator, g, values[i]);
+      }
+      CFAllocatorDeallocate(allocator, values);
+      CFAllocatorDeallocate(allocator, keys);
+      yajl_gen_map_close(*g);
+    }
+  } else {
+    yajl_gen_null(*g);
+  }
+}
+
+inline CFStringRef JSONCreateString(CFAllocatorRef allocator, CFTypeRef value) {
+  yajl_gen_config generatorConfig = { 0, "" }; 
+  yajl_gen generator = yajl_gen_alloc(&generatorConfig, NULL);
+  __JSONGeneratorAppendValue(allocator, &generator, value);
+  const unsigned char *buffer;
+  unsigned int length;
+  yajl_gen_get_buf(generator, &buffer, &length);
+  CFStringRef string = CFStringCreateWithBytes(allocator, buffer, length, kCFStringEncodingUTF8, 0);
+  yajl_gen_clear(generator);
+  yajl_gen_free(generator); 
+  return string;
+}
+
