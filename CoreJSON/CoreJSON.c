@@ -384,7 +384,6 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     
     json->yajlParserConfig.allowComments = 1;
     json->yajlParserConfig.checkUTF8 = 1;
-    json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, NULL, (void *)json);
     
     json->yajlGeneratorConfig.beautify = 1;
     json->yajlGeneratorConfig.indentString = "  ";
@@ -405,7 +404,7 @@ inline CFIndex JSONRelease(CoreJSONRef json) {
     if ((retainCount = --json->retainCount) == 0) {
       CFAllocatorRef allocator = json->allocator;
       
-      yajl_free(json->yajlParser);
+      //yajl_free(json->yajlParser);
       // TODO: release generator
       
       // TODO: Check if json->elements is allocated first
@@ -428,6 +427,8 @@ inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   // TODO: Let's make sure we've got a clean plate first
   //CFArrayRemoveAllValues(json->elements);
   
+  json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, NULL, (void *)json);
+  
   __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
   if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
     // TODO: Error stuff
@@ -438,6 +439,7 @@ inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   json->yajlParserStatus = yajl_parse_complete(json->yajlParser);
   
   yajl_free(json->yajlParser);
+  json->yajlParser = NULL;
 }
 
 inline CoreJSONRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string) {
