@@ -358,12 +358,31 @@ inline CFIndex __JSONElementsAppend(CoreJSONRef json, CFTypeRef value) {
   return index;
 }
 
+#pragma Memory allocation
+
+inline void *__JSONAllocatorAllocate(void *ctx, unsigned int sz) {
+  return CFAllocatorAllocate(ctx, sz, 0);
+}
+
+inline void __JSONAllocatorDeallocate(void *ctx, void *ptr) {
+  CFAllocatorDeallocate(ctx, ptr);
+}
+
+inline void *__JSONAllocatorReallocate(void *ctx, void *ptr, unsigned int sz) {
+  return CFAllocatorReallocate(ctx, ptr, sz, 0);
+}
+
 #pragma Public API
 
 inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
   CoreJSONRef json = CFAllocatorAllocate(allocator, sizeof(CoreJSON), 0);
   if (json) {
     json->allocator = allocator ? CFRetain(allocator) : NULL;
+    
+    json->yajlAllocFuncs.ctx     = (void *)json->allocator;
+    json->yajlAllocFuncs.malloc  = __JSONAllocatorAllocate;
+    json->yajlAllocFuncs.realloc = __JSONAllocatorReallocate;
+    json->yajlAllocFuncs.free    = __JSONAllocatorDeallocate;
     
     json->yajlParserCallbacks.yajl_null        = __JSONParserAppendNull;
     json->yajlParserCallbacks.yajl_boolean     = __JSONParserAppendBooleanWithInteger;
@@ -383,10 +402,10 @@ inline CoreJSONRef JSONCreate(CFAllocatorRef allocator) {
     json->yajlParserCallbacks.yajl_string      = __JSONParserAppendStringWithBytes;
     
     json->yajlParserConfig.allowComments = 1;
-    json->yajlParserConfig.checkUTF8 = 1;
+    json->yajlParserConfig.checkUTF8 = 0;
     
-    json->yajlGeneratorConfig.beautify = 1;
-    json->yajlGeneratorConfig.indentString = "  ";
+    json->yajlGeneratorConfig.beautify = 0;
+    json->yajlGeneratorConfig.indentString = "";
     json->yajlGenerator = yajl_gen_alloc(&json->yajlGeneratorConfig, NULL);
     
     json->elementsIndex = 0;
@@ -427,7 +446,7 @@ inline void JSONParseWithString(CoreJSONRef json, CFStringRef string) {
   // TODO: Let's make sure we've got a clean plate first
   //CFArrayRemoveAllValues(json->elements);
   
-  json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, NULL, (void *)json);
+  json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, &json->yajlAllocFuncs, (void *)json);
   
   __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
   if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {

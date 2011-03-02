@@ -127,7 +127,8 @@ typedef struct {
   yajl_parser_config yajlParserConfig;
   yajl_status        yajlParserStatus;
   yajl_callbacks     yajlParserCallbacks;
-
+  yajl_alloc_funcs   yajlAllocFuncs;
+  
   yajl_gen           yajlGenerator;
   yajl_gen_config    yajlGeneratorConfig;
   yajl_status        yajlGeneratorStatus;
@@ -145,6 +146,12 @@ typedef CoreJSON *CoreJSONRef;
 #pragma Internal elements array support
 
 CFIndex __JSONElementsAppend(CoreJSONRef json, CFTypeRef value);
+
+#pragma Memory allocation
+
+void *__JSONAllocatorAllocate   (void *ctx, unsigned int sz);
+void  __JSONAllocatorDeallocate (void *ctx, void *ptr);
+void *__JSONAllocatorReallocate (void *ctx, void *ptr, unsigned int sz);
 
 #pragma Public API
 

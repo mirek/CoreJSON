@@ -4,16 +4,29 @@ CoreJSON is iOS, OSX (will also work on Linux) Core Foundation based fast parser
 
 Comparison with other JSON frameworks:
 
+iPhone 4.2 Simulator running on MacBook Pro 3.06GHz Intel Core 2 Duo, OSX SL 10.6.6:
+
 | Framework            | What    | Min     | Mean    | Max 
 |:---------------------|--------:|--------:|--------:|--------:
-|              JSONKit |    read |   3.960 |   4.963 |  71.561
-|             CoreJSON |    read |   5.356 |   5.708 |   5.881
-|           Apple JSON |    read |   7.245 |   7.568 |  13.036
-|                 YAJL |    read |   7.693 |   7.756 |   8.530
-|       JSON Framework |    read |   9.167 |   9.336 |  11.189
-|            TouchJSON |    read |  13.231 |  13.485 |  17.559
+|              JSONKit |    read |   4.032 |   4.571 |  13.548
+|             CoreJSON |    read |   4.892 |   5.487 |  10.001
+|                 YAJL |    read |   7.637 |   7.670 |   8.084
+|           Apple JSON |    read |   7.290 |   8.241 |  14.693
+|            TouchJSON |    read |  13.565 |  13.970 |  24.359
+|       JSON Framework |    read |   9.866 |  12.001 |  30.772
 
-_Tests performed on iPad Simulator with https://github.com/samsoffes/json-benchmarks_
+iPhone 4:
+
+| Framework            | What    | Min     | Mean    | Max 
+|:---------------------|--------:|--------:|--------:|--------:
+|              JSONKit |    read |  35.887 |  37.185 |  40.931
+|             CoreJSON |    read |  59.742 |  64.204 | 132.731
+|           Apple JSON |    read | 114.739 | 119.915 | 229.629
+|                 YAJL |    read | 120.171 | 124.833 | 262.097
+|       JSON Framework |    read | 147.569 | 152.352 | 205.846
+|            TouchJSON |    read | 229.279 | 234.811 | 370.086
+
+_Tests performed with https://github.com/samsoffes/json-benchmarks_
 
 ## Usage
 
