@@ -4,7 +4,7 @@ CoreJSON is iOS, OSX (will also work on Linux) Core Foundation based fast parser
 
 Comparison with other JSON frameworks:
 
-![Chart](http://chart.apis.google.com/chart?chxl=1:|TouchJSON|JSON+Framework|YAJL|Apple+JSON|CoreJSON|JSONKit&chxr=0,0,60&chxt=x,y&chbh=a&chs=300x165&cht=bhg&chco=94AAC8&chds=0,237.904&chd=t:46.582,63.192,128.143,129.231,154.504,237.904&chtt=1+Iteration%2C+iPhone+4+iOS+4.2.1)
+![Chart](http://chart.apis.google.com/chart?chf=bg,s,67676700&chxl=1:|TouchJSON|JSON+Framework|YAJL|Apple+JSON|CoreJSON|JSONKit&chxr=0,0,60&chxt=x,y&chbh=a&chs=300x165&cht=bhg&chco=94AAC8&chds=0,237.904&chd=t:46.582,63.192,128.143,129.231,154.504,237.904&chtt=1+Iteration%2C+iPhone+4+iOS+4.2.1)
 
 _Tests performed with https://github.com/samsoffes/json-benchmarks_
 
