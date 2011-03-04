@@ -10,22 +10,60 @@ _Tests performed with https://github.com/samsoffes/json-benchmarks_
 
 ## Usage
 
-Parsing:
+Parsing in Objective-C:
 
-    CoreJSONRef json = JSONCreateWithString(NULL, <<NSString or CFStringRef>>);
-    id object = [(id)JSONGetObject(json) retain];
-    JSONRelease(json);
-    
-    // Do whatever you want with object, when done, [object release] it
-    ...
+    NSError *error = nil;
+    id object = (id)JSONCreateWithString(NULL, (CFStringRef)@"[foo, bar]", kJSONReadOptionsDefault, (CFErrorRef *)&error);
+    if (object) {
+      // Do something with object (NSArray)
+      [object release];
+    }
 
-Generating:
+Parsing in C:
 
-    NSString *json = (id)JSONCreateStringWithObject(NULL, <<Whatever>>);
-    
-    // Do something with json string...
-    
-    [json release];
+    CFErrorRef error = NULL;
+    CFTypeRef object = JSONCreateWithString(NULL, CFSTR("[foo, bar]", kJSONReadOptionsDefault, &error);
+    if (object) {
+      // Do something with object
+      CFRelease(object);
+    }
+
+Generating in Objective-C:
+
+    NSArray *array = [NSArray arrayWithObjects: @"foo", @"bar", nil];
+    NSError *error = nil;
+    NSString *json = (id)JSONCreateString(NULL, array, kJSONWriteOptionsDefault, (CFErrorRef *)&error);
+    if (json) {
+      // Do something with json string
+      [json release];
+    }
+    [array release];
+
+Generating in C:
+
+    CFTypeRef values[] = { CFSTR("foo"), CFSTR("bar") };
+    CFArrayRef array = CFArrayCreateMutable(NULL, values, 2, &kCFTypeArrayCallBacks);
+    CFErrorRef error = NULL;
+    CFStringRef json = JSONCreateString(NULL, array, kJSONWriteOptionsDefault, &error);
+    if (json) {
+      // Do something with json string
+      CFRelease(json);
+    }
+    CFRelease(array);
+
+## Options
+
+`JSONReadOptions`:
+
+* `kJSONReadOptionCheckUTF8                  = 1` -- Check UTF8 strings
+* `kJSONReadOptionAllowComments              = 2` -- Allow `/* comments */`
+* `kJSONReadOptionsDefault                   = 0` -- Default options (don't check UTF8 strings and do not allow comments)
+* `kJSONReadOptionsCheckUTF8AndAllowComments = 3` -- Check UTF8 strings and allow comments
+
+`JSONWriteOptions`:
+
+* `kJSONWriteOptionIndent   = 1` -- Indent generated JSON string
+* `kJSONWriteOptionsDefault = 0` -- Default options (do not indent JSON string)
 
 ## Using in your projects
 
