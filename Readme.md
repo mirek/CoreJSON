@@ -22,7 +22,7 @@ Parsing in Objective-C:
 Parsing in C:
 
     CFErrorRef error = NULL;
-    CFTypeRef object = JSONCreateWithString(NULL, CFSTR("[foo, bar]", kJSONReadOptionsDefault, &error);
+    CFTypeRef object = JSONCreateWithString(NULL, CFSTR("[foo, bar]"), kJSONReadOptionsDefault, &error);
     if (object) {
       // Do something with object
       CFRelease(object);
@@ -50,6 +50,8 @@ Generating in C:
       CFRelease(json);
     }
     CFRelease(array);
+    
+_You should also take care of `error` object_
 
 ## Options
 
@@ -66,6 +68,8 @@ Generating in C:
 * `kJSONWriteOptionsDefault = 0` -- Default options (do not indent JSON string)
 
 ## Using in your projects
+
+There are just 2 files `CoreJSON.h` and `CoreJSON.c` you'll need together with `libyajl`.
 
 For your own (non Mac AppStore) OSX projects the quick way is to:
 
