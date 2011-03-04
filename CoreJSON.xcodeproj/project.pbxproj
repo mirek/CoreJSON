@@ -54,6 +54,8 @@
 		EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */; };
 		EBB81078130BEC8C00CF5EF8 /* CoreJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */; };
 		EBB81079130BEC8C00CF5EF8 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; };
+		EBCA2947131F03C400361057 /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = EBCA2946131F03C400361057 /* sample.json */; };
+		EBCA29A9131FFB2C00361057 /* TestAllocator.c in Sources */ = {isa = PBXBuildFile; fileRef = EBCA29A7131FFB2C00361057 /* TestAllocator.c */; };
 		EBCB75E6130C0F36009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 		EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -99,6 +101,9 @@
 		EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreJSONTests.m; sourceTree = "<group>"; };
 		EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CoreJSON.c; sourceTree = "<group>"; };
 		EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreJSON.h; sourceTree = "<group>"; };
+		EBCA2946131F03C400361057 /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.json; sourceTree = "<group>"; };
+		EBCA29A7131FFB2C00361057 /* TestAllocator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TestAllocator.c; sourceTree = "<group>"; };
+		EBCA29A8131FFB2C00361057 /* TestAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAllocator.h; sourceTree = "<group>"; };
 		EBCB75E5130C0F36009F0B55 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -224,8 +229,11 @@
 		EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */ = {
 			isa = PBXGroup;
 			children = (
+				EBCA2945131F03C400361057 /* tests */,
 				EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */,
 				EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */,
+				EBCA29A8131FFB2C00361057 /* TestAllocator.h */,
+				EBCA29A7131FFB2C00361057 /* TestAllocator.c */,
 				EBB81064130BEC3E00CF5EF8 /* Supporting Files */,
 			);
 			path = CoreJSONTests;
@@ -239,6 +247,14 @@
 				EBB81069130BEC3E00CF5EF8 /* CoreJSONTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EBCA2945131F03C400361057 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				EBCA2946131F03C400361057 /* sample.json */,
+			);
+			path = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,6 +387,7 @@
 			files = (
 				EBB81068130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */,
 				EBB8106B130BEC3E00CF5EF8 /* CoreJSONTests.h in Resources */,
+				EBCA2947131F03C400361057 /* sample.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +455,7 @@
 				EB173E3C1316C2AE00C173A9 /* yajl_parser.c in Sources */,
 				EB173E411316C2AE00C173A9 /* yajl_version.c in Sources */,
 				EB173E441316C2AE00C173A9 /* yajl.c in Sources */,
+				EBCA29A9131FFB2C00361057 /* TestAllocator.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

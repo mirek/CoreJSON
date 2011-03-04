@@ -10,7 +10,10 @@
 #include <yajl/yajl_parse.h>
 #include <yajl/yajl_gen.h>
 
-#define CORE_JSON_STACK_MAX_DEPTH 1024
+#define CORE_JSON_STACK_INITIAL_SIZE              YAJL_MAX_DEPTH
+#define CORE_JSON_STACK_ENTRY_KEYS_INITIAL_SIZE   1024
+#define CORE_JSON_STACK_ENTRY_VALUES_INITIAL_SIZE 1024
+#define CORE_JSON_ELEMENTS_INITIAL_SIZE           4096
 
 #pragma Internal string helper for fast UTF8 buffer access
 
@@ -98,7 +101,7 @@ typedef struct {
 typedef __JSONStack *__JSONStackRef;
 
 __JSONStackRef      __JSONStackCreate           (CFAllocatorRef allocator, CFIndex initialSize);
-CFIndex             __JSONStackRelease          (__JSONStackRef stack);
+__JSONStackRef      __JSONStackRelease          (__JSONStackRef stack);
 __JSONStackEntryRef __JSONStackGetTop           (__JSONStackRef stack);
 bool                __JSONStackPush             (__JSONStackRef stack, __JSONStackEntryRef entry);
 __JSONStackEntryRef __JSONStackPop              (__JSONStackRef stack);
@@ -119,6 +122,12 @@ int __JSONParserAppendMapEnd             (void *context);
 int __JSONParserAppendArrayStart         (void *context);
 int __JSONParserAppendArrayEnd           (void *context);
 
+#pragma Internal memory allocation
+
+void *__JSONAllocatorAllocate   (void *ctx, unsigned int sz);
+void  __JSONAllocatorDeallocate (void *ctx, void *ptr);
+void *__JSONAllocatorReallocate (void *ctx, void *ptr, unsigned int sz);
+
 typedef struct {
   CFAllocatorRef     allocator;
   CFIndex            retainCount;
@@ -129,37 +138,58 @@ typedef struct {
   yajl_callbacks     yajlParserCallbacks;
   yajl_alloc_funcs   yajlAllocFuncs;
   
-  yajl_gen           yajlGenerator;
-  yajl_gen_config    yajlGeneratorConfig;
-  yajl_status        yajlGeneratorStatus;
-
   CFIndex            elementsIndex;
   CFIndex            elementsSize;
   CFTypeRef         *elements;
 
   __JSONStackRef     stack;
   
-} CoreJSON;
+} __JSON;
 
-typedef CoreJSON *CoreJSONRef;
+typedef __JSON *__JSONRef;
+
+typedef enum JSONReadOptions {
+  kJSONReadOptionCheckUTF8                  = 1,
+  kJSONReadOptionAllowComments              = 2,
+  
+  kJSONReadOptionsDefault                   = 0,
+  kJSONReadOptionsCheckUTF8AndAllowComments = 3
+} JSONReadOptions;
+
+typedef enum JSONWriteOptions {
+  kJSONWriteOptionIndent = 1,
+  
+  kJSONWriteOptionsDefault = 0
+} JSONWriteOptions;
 
 #pragma Internal elements array support
 
-CFIndex __JSONElementsAppend(CoreJSONRef json, CFTypeRef value);
+CFIndex __JSONElementsAppend       (__JSONRef json, CFTypeRef value);
 
-#pragma Memory allocation
+#pragma Generator
 
-void *__JSONAllocatorAllocate   (void *ctx, unsigned int sz);
-void  __JSONAllocatorDeallocate (void *ctx, void *ptr);
-void *__JSONAllocatorReallocate (void *ctx, void *ptr, unsigned int sz);
+void __JSONGeneratorAppendString             (CFAllocatorRef allocator, yajl_gen *g, CFStringRef value);
+void __JSONGeneratorAppendDoubleTypeNumber   (CFAllocatorRef allocator, yajl_gen *g, CFNumberRef value);
+void __JSONGeneratorAppendLongLongTypeNumber (CFAllocatorRef allocator, yajl_gen *g, CFNumberRef value);
+void __JSONGeneratorAppendNumber             (CFAllocatorRef allocator, yajl_gen *g, CFNumberRef value);
+void __JSONGeneratorAppendArray              (CFAllocatorRef allocator, yajl_gen *g, CFArrayRef value);
+void __JSONGeneratorAppendDictionary         (CFAllocatorRef allocator, yajl_gen *g, CFDictionaryRef value);
+void __JSONGeneratorAppendValue              (CFAllocatorRef allocator, yajl_gen *g, CFTypeRef value);
+void __JSONGeneratorAppendAttributedString   (CFAllocatorRef allocator, yajl_gen *g, CFAttributedStringRef value);
+void __JSONGeneratorAppendBoolean            (CFAllocatorRef allocator, yajl_gen *g, CFBooleanRef value);
+void __JSONGeneratorAppendNull               (CFAllocatorRef allocator, yajl_gen *g, CFNullRef value);
+void __JSONGeneratorAppendURL                (CFAllocatorRef allocator, yajl_gen *g, CFURLRef value);
+void __JSONGeneratorAppendUUID               (CFAllocatorRef allocator, yajl_gen *g, CFUUIDRef value);
+
+__JSONRef   __JSONCreate           (CFAllocatorRef allocator, JSONReadOptions options);
+void        __JSONParseWithString  (__JSONRef    json, CFStringRef string, CFErrorRef *error);
+CFTypeRef   __JSONCreateObject     (__JSONRef    json);
+__JSONRef   __JSONRelease          (__JSONRef    json);
 
 #pragma Public API
 
-extern CoreJSONRef JSONCreate           (CFAllocatorRef allocator);
-extern CoreJSONRef JSONCreateWithString (CFAllocatorRef allocator, CFStringRef string);
-extern void        JSONParseWithString  (CoreJSONRef    json,      CFStringRef string);
-extern CFTypeRef   JSONGetObject        (CoreJSONRef    json);
-extern CFIndex     JSONRelease          (CoreJSONRef    json);
+CFTypeRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string, JSONReadOptions options, CFErrorRef *error);
+//CFTypeRef     JSONCreateWithData       (CFAllocatorRef allocator, CFDataRef data);
 
-       void        __JSONGeneratorAppendValue (CFAllocatorRef allocator, yajl_gen *g, CFTypeRef value);
-extern CFStringRef   JSONCreateString         (CFAllocatorRef allocator, CFTypeRef value);
+CFStringRef JSONCreateString(CFAllocatorRef allocator, CFTypeRef value, JSONWriteOptions options, CFErrorRef *error);
+//CFDataRef     JSONCreateData           (CFAllocatorRef allocator, CFTypeRef value);
