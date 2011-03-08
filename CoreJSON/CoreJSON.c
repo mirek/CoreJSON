@@ -478,7 +478,7 @@ inline CFTypeRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef stri
 }
 
 inline CFTypeRef __JSONCreateObject(__JSONRef json) {
-  return CFRetain(*json->elements);
+  return (json && json->elements && json->elementsIndex && *json->elements) ? CFRetain(*json->elements) : NULL;
 }
 
 #pragma Generator
