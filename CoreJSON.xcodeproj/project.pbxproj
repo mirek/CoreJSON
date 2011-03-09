@@ -48,7 +48,7 @@
 		EBB1ADE41312AA16006476A7 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EBB1AE7F1312B683006476A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB1AE7E1312B683006476A7 /* Cocoa.framework */; };
 		EBB81057130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81055130BEC3E00CF5EF8 /* InfoPlist.strings */; };
-		EBB81062130BEC3E00CF5EF8 /* CoreJSON (OSX).framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */; };
+		EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */; };
 		EBB81068130BEC3E00CF5EF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */; };
 		EBB8106B130BEC3E00CF5EF8 /* CoreJSONTests.h in Resources */ = {isa = PBXBuildFile; fileRef = EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */; };
 		EBB8106D130BEC3E00CF5EF8 /* CoreJSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */; };
@@ -86,10 +86,10 @@
 		EB173E201316C2AE00C173A9 /* yajl_version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yajl_version.c; path = YAJL/yajl/src/yajl_version.c; sourceTree = SOURCE_ROOT; };
 		EB173E211316C2AE00C173A9 /* yajl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yajl.c; path = YAJL/yajl/src/yajl.c; sourceTree = SOURCE_ROOT; };
 		EB7354C2130E688300D6C2D8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
-		EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCoreJSON (iOS).a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libCoreJSON (iOS).a"; path = libCoreJSON_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.2.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		EBB1AE7E1312B683006476A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CoreJSON (OSX).framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB81054130BEC3E00CF5EF8 /* CoreJSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreJSON-Info.plist"; sourceTree = "<group>"; };
 		EBB81056130BEC3E00CF5EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EBB81058130BEC3E00CF5EF8 /* CoreJSON-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreJSON-Prefix.pch"; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBB1AE7F1312B683006476A7 /* Cocoa.framework in Frameworks */,
-				EBB81062130BEC3E00CF5EF8 /* CoreJSON (OSX).framework in Frameworks */,
+				EBB81062130BEC3E00CF5EF8 /* CoreJSON.framework in Frameworks */,
 				EBCB75E9130C1074009F0B55 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -189,7 +189,7 @@
 		EBB8104A130BEC3E00CF5EF8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */,
+				EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */,
 				EBB8105E130BEC3E00CF5EF8 /* CoreJSONTests.octest */,
 				EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */,
 			);
@@ -291,9 +291,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		EBB1ADD71312A7B6006476A7 /* CoreJSON (iOS) */ = {
+		EBB1ADD71312A7B6006476A7 /* CoreJSON_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON (iOS)" */;
+			buildConfigurationList = EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON_iOS" */;
 			buildPhases = (
 				EBB1ADD41312A7B6006476A7 /* Sources */,
 				EBB1ADD51312A7B6006476A7 /* Frameworks */,
@@ -303,14 +303,14 @@
 			);
 			dependencies = (
 			);
-			name = "CoreJSON (iOS)";
+			name = CoreJSON_iOS;
 			productName = CoreJSON;
 			productReference = EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */ = {
+		EBB81048130BEC3E00CF5EF8 /* CoreJSON */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON (OSX)" */;
+			buildConfigurationList = EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */;
 			buildPhases = (
 				EBB81044130BEC3E00CF5EF8 /* Sources */,
 				EBB81045130BEC3E00CF5EF8 /* Frameworks */,
@@ -321,9 +321,9 @@
 			);
 			dependencies = (
 			);
-			name = "CoreJSON (OSX)";
+			name = CoreJSON;
 			productName = CoreJSON;
-			productReference = EBB81049130BEC3E00CF5EF8 /* CoreJSON (OSX).framework */;
+			productReference = EBB81049130BEC3E00CF5EF8 /* CoreJSON.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */ = {
@@ -365,9 +365,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */,
+				EBB81048130BEC3E00CF5EF8 /* CoreJSON */,
 				EBB8105D130BEC3E00CF5EF8 /* CoreJSONTests */,
-				EBB1ADD71312A7B6006476A7 /* CoreJSON (iOS) */,
+				EBB1ADD71312A7B6006476A7 /* CoreJSON_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -464,7 +464,7 @@
 /* Begin PBXTargetDependency section */
 		EBB81061130BEC3E00CF5EF8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EBB81048130BEC3E00CF5EF8 /* CoreJSON (OSX) */;
+			target = EBB81048130BEC3E00CF5EF8 /* CoreJSON */;
 			targetProxy = EBB81060130BEC3E00CF5EF8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -665,7 +665,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON (iOS)" */ = {
+		EBB1ADDD1312A7B6006476A7 /* Build configuration list for PBXNativeTarget "CoreJSON_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EBB1ADDE1312A7B6006476A7 /* Debug */,
@@ -683,7 +683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON (OSX)" */ = {
+		EBB81070130BEC3E00CF5EF8 /* Build configuration list for PBXNativeTarget "CoreJSON" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EBB81071130BEC3E00CF5EF8 /* Debug */,
