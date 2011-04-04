@@ -514,7 +514,7 @@ inline void __JSONGeneratorAppendArray(CFAllocatorRef allocator, yajl_gen *g, CF
   yajl_gen_array_open(*g);
   CFIndex n = CFArrayGetCount(value);
   CFTypeRef *values = CFAllocatorAllocate(allocator, sizeof(CFTypeRef) * n, 0);
-  CFArrayGetValues(value, CFRangeMake(0, n - 1), values);
+  CFArrayGetValues(value, CFRangeMake(0, n), values);
   for (CFIndex i = 0; i < n; i++)
     __JSONGeneratorAppendValue(allocator, g, values[i]);
   CFAllocatorDeallocate(allocator, values);
