@@ -223,17 +223,17 @@ inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFIndex key) {
 
 inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
 }
 
 inline int __JSONParserAppendNull(void *context) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, kCFNull));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, kCFNull));
 }
 
 inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, value ? kCFBooleanTrue : kCFBooleanFalse));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, value ? kCFBooleanTrue : kCFBooleanFalse));
 }
 
 inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
@@ -254,29 +254,29 @@ inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, u
     number = CFNumberCreate(json->allocator, kCFNumberLongLongType, &value_);
   }
   
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, number));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, number));
 }
 
 inline int __JSONParserAppendNumberWithLong(void *context, long value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFNumberCreate(json->allocator, kCFNumberLongType, &value)));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFNumberCreate(json->allocator, kCFNumberLongType, &value)));
 }
 
 inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, CFNumberCreate(json->allocator, kCFNumberDoubleType, &value)));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFNumberCreate(json->allocator, kCFNumberDoubleType, &value)));
 }
 
 inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppend(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
+  return __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
 }
 
 inline int __JSONParserAppendMapStart(void *context) {
   __JSONRef json = (__JSONRef)context;
   
   // Placeholder for the CFDictionaryRef which will be set when we get map end token
-  CFIndex index = __JSONElementsAppend(json, kCFNull);
+  CFIndex index = __JSONElementsAppendAndConsume(json, kCFNull);
   
   // Add element to the parent container
   __JSONStackAppendValueAtTop(json->stack, index);
@@ -318,7 +318,7 @@ inline int __JSONParserAppendArrayStart(void *context) {
   __JSONRef json = (__JSONRef)context;
   
   // Placeholder for the CFArrayRef which will be set when we get array end token
-  CFIndex index = __JSONElementsAppend(json, kCFNull);
+  CFIndex index = __JSONElementsAppendAndConsume(json, kCFNull);
   
   // Add element to the parent container
   __JSONStackAppendValueAtTop(json->stack, index);
@@ -347,7 +347,7 @@ inline int __JSONParserAppendArrayEnd(void *context) {
   return success;
 }
 
-inline CFIndex __JSONElementsAppend(__JSONRef json, CFTypeRef value) {
+inline CFIndex __JSONElementsAppendAndConsume(__JSONRef json, CFTypeRef value) {
   CFIndex index = json->elementsIndex;
   if (json->elementsIndex == json->elementsSize) { // Reallocate
     CFIndex largerSize = json->elementsSize ? json->elementsSize << 1 : CORE_JSON_ELEMENTS_INITIAL_SIZE;
