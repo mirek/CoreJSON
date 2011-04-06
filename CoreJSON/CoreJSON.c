@@ -8,6 +8,13 @@
 
 #include "CoreJSON.h"
 
+// Internal helper macro for appending elements
+#define __JSON_CONSUME_AND_RETURN(create) \
+  CFTypeRef __json_element = (create); \
+  int __json_return = __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, __json_element)); \
+  CFRelease(__json_element); \
+  return __json_return
+
 #pragma Internal string helper for fast UTF8 buffer access
 
 inline __JSONUTF8String __JSONUTF8StringMake(CFAllocatorRef allocator, CFStringRef string) {
@@ -223,17 +230,17 @@ inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFIndex key) {
 
 inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
+  __JSON_CONSUME_AND_RETURN(CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0));
 }
 
 inline int __JSONParserAppendNull(void *context) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, kCFNull));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, kCFNull));
 }
 
 inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, value ? kCFBooleanTrue : kCFBooleanFalse));
+  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, value ? kCFBooleanTrue : kCFBooleanFalse));
 }
 
 inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
@@ -254,29 +261,29 @@ inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, u
     number = CFNumberCreate(json->allocator, kCFNumberLongLongType, &value_);
   }
   
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, number));
+  __JSON_CONSUME_AND_RETURN(number);
 }
 
 inline int __JSONParserAppendNumberWithLong(void *context, long value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFNumberCreate(json->allocator, kCFNumberLongType, &value)));
+  __JSON_CONSUME_AND_RETURN(CFNumberCreate(json->allocator, kCFNumberLongType, &value));
 }
 
 inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFNumberCreate(json->allocator, kCFNumberDoubleType, &value)));
+  __JSON_CONSUME_AND_RETURN(CFNumberCreate(json->allocator, kCFNumberDoubleType, &value));
 }
 
 inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   __JSONRef json = (__JSONRef)context;
-  return __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppendAndConsume(json, CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0)));
+  __JSON_CONSUME_AND_RETURN(CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0));
 }
 
 inline int __JSONParserAppendMapStart(void *context) {
   __JSONRef json = (__JSONRef)context;
   
   // Placeholder for the CFDictionaryRef which will be set when we get map end token
-  CFIndex index = __JSONElementsAppendAndConsume(json, kCFNull);
+  CFIndex index = __JSONElementsAppend(json, kCFNull);
   
   // Add element to the parent container
   __JSONStackAppendValueAtTop(json->stack, index);
@@ -318,7 +325,7 @@ inline int __JSONParserAppendArrayStart(void *context) {
   __JSONRef json = (__JSONRef)context;
   
   // Placeholder for the CFArrayRef which will be set when we get array end token
-  CFIndex index = __JSONElementsAppendAndConsume(json, kCFNull);
+  CFIndex index = __JSONElementsAppend(json, kCFNull);
   
   // Add element to the parent container
   __JSONStackAppendValueAtTop(json->stack, index);
@@ -347,7 +354,7 @@ inline int __JSONParserAppendArrayEnd(void *context) {
   return success;
 }
 
-inline CFIndex __JSONElementsAppendAndConsume(__JSONRef json, CFTypeRef value) {
+inline CFIndex __JSONElementsAppend(__JSONRef json, CFTypeRef value) {
   CFIndex index = json->elementsIndex;
   if (json->elementsIndex == json->elementsSize) { // Reallocate
     CFIndex largerSize = json->elementsSize ? json->elementsSize << 1 : CORE_JSON_ELEMENTS_INITIAL_SIZE;
@@ -358,7 +365,7 @@ inline CFIndex __JSONElementsAppendAndConsume(__JSONRef json, CFTypeRef value) {
     }
   }
   if (json->elementsIndex < json->elementsSize)
-    json->elements[json->elementsIndex++] = value;
+    json->elements[json->elementsIndex++] = CFRetain(value);
   return index;
 }
 

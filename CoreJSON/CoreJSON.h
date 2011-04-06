@@ -10,18 +10,6 @@
 #include <yajl/yajl_parse.h>
 #include <yajl/yajl_gen.h>
 
-#ifndef __has_feature      
-#define __has_feature(x) 0 // Compatibility with non-clang compilers
-#endif
-
-#ifndef CF_CONSUMED
-#if __has_feature(attribute_cf_consumed)
-#define CF_CONSUMED __attribute__((cf_consumed))
-#else
-#define CF_CONSUMED
-#endif
-#endif
-
 #define CORE_JSON_STACK_INITIAL_SIZE              YAJL_MAX_DEPTH
 #define CORE_JSON_STACK_ENTRY_KEYS_INITIAL_SIZE   1024
 #define CORE_JSON_STACK_ENTRY_VALUES_INITIAL_SIZE 1024
@@ -176,7 +164,7 @@ typedef enum JSONWriteOptions {
 
 #pragma Internal elements array support
 
-CFIndex __JSONElementsAppendAndConsume       (__JSONRef json, CFTypeRef CF_CONSUMED value);
+CFIndex __JSONElementsAppend                 (__JSONRef json, CFTypeRef value);
 
 #pragma Generator
 
