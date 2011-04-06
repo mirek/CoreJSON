@@ -182,7 +182,7 @@ void __JSONGeneratorAppendURL                (CFAllocatorRef allocator, yajl_gen
 void __JSONGeneratorAppendUUID               (CFAllocatorRef allocator, yajl_gen *g, CFUUIDRef value);
 
 __JSONRef   __JSONCreate           (CFAllocatorRef allocator, JSONReadOptions options);
-void        __JSONParseWithString  (__JSONRef    json, CFStringRef string, CFErrorRef *error);
+bool        __JSONParseWithString  (__JSONRef    json, CFStringRef string, CFErrorRef *error);
 CFTypeRef   __JSONCreateObject     (__JSONRef    json);
 __JSONRef   __JSONRelease          (__JSONRef    json);
 

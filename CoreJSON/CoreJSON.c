@@ -444,12 +444,14 @@ inline __JSONRef __JSONRelease(__JSONRef json) {
   return json;
 }
 
-inline void __JSONParseWithString(__JSONRef json, CFStringRef string, CFErrorRef *error) {
+inline bool __JSONParseWithString(__JSONRef json, CFStringRef string, CFErrorRef *error) {
+  bool success = 1;
   json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, &json->yajlAllocFuncs, (void *)json);
   
   __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
   if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
     if (error) {
+      success = 0;
 //      __JSONErrorCreate(json->allocator, )
 //      CFDictionaryCreate(<#CFAllocatorRef allocator#>, <#const void **keys#>, <#const void **values#>, <#CFIndex numValues#>, <#const CFDictionaryKeyCallBacks *keyCallBacks#>, <#const CFDictionaryValueCallBacks *valueCallBacks#>)
 //      *error = CFErrorCreate(json->allocator, CORE_JSON_ERROR_DOMAIN, (CFIndex)json->yajlParserStatus, userInfo);
@@ -462,6 +464,8 @@ inline void __JSONParseWithString(__JSONRef json, CFStringRef string, CFErrorRef
   json->yajlParserStatus = yajl_parse_complete(json->yajlParser);
   yajl_free(json->yajlParser);
   json->yajlParser = NULL;
+  
+  return success;
 }
 
 inline CFTypeRef JSONCreateWithString(CFAllocatorRef allocator, CFStringRef string, JSONReadOptions options, CFErrorRef *error) {
