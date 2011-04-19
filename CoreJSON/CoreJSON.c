@@ -274,9 +274,13 @@ inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
   __JSON_CONSUME_AND_RETURN(CFNumberCreate(json->allocator, kCFNumberDoubleType, &value));
 }
 
+// LOOK OUT! Appending to key array, not the value array
 inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
   __JSONRef json = (__JSONRef)context;
-  __JSON_CONSUME_AND_RETURN(CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0));
+  CFTypeRef __json_element = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
+  int __json_return = __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppend(json, __json_element));
+  CFRelease(__json_element);
+  return __json_return;
 }
 
 inline int __JSONParserAppendMapStart(void *context) {
