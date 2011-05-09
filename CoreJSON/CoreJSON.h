@@ -5,6 +5,18 @@
 // Copyright 2011 Mirek Rusin <mirek [at] me [dot] com>
 //                http://github.com/mirek/CoreJSON
 //
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <yajl/yajl_parse.h>
@@ -14,49 +26,6 @@
 #define CORE_JSON_STACK_ENTRY_KEYS_INITIAL_SIZE   1024
 #define CORE_JSON_STACK_ENTRY_VALUES_INITIAL_SIZE 1024
 #define CORE_JSON_ELEMENTS_INITIAL_SIZE           4096
-
-#pragma Internal string helper for fast UTF8 buffer access
-
-// Internal helper structure supporting fast and easy access to CFStringRef's
-// string buffer. Whenever possible getting the buffer is O(1) without copying
-// CFStringRef's buffer. If not possible buffer is being copied.
-//
-// Provided CFStringRef has to be valid for the lifetime of the struct.
-// 
-// When finished invoke __JSONUTF8StringDestroy(...) to deallocate internal
-// data properly. Internal members of this struct should not be accessed directly.
-// Use provided functions instead.
-//
-// This structure is not opaque and is not intended to be passed as function
-// argument. CFStringRef should be passed instead. The structure should be
-// used inside the function to get access to UTF8 buffer of CFStringRef.
-typedef struct {
-  CFAllocatorRef allocator;
-  CFStringRef string;
-  const unsigned char *pointer;
-  const unsigned char *buffer;
-  CFIndex maximumSize;
-} __JSONUTF8String;
-
-// Internal function, use it to instantiate __JSONUTF8String structure to get
-// fast and easy access to CFStringRef's UTF8 buffer.
-//
-// The function takes advantage of Core Foundation CFStringRef and tries to get buffer
-// pointer in 0(1). If not possible, the buffer is being copied to internally allocated
-// storage.
-//
-// Returns properly initialized __JSONUTF8String struct. Use __JSONUTF8StringGetBuffer
-// to get the UTF8 buffer. Invoke __JSONUTF8StringDestroy to deallocate this struct properly.
-__JSONUTF8String     __JSONUTF8StringMake           (CFAllocatorRef allocator, CFStringRef string);
-
-// Internal function, get the internal buffer of associated CFStringRef.
-const unsigned char *__JSONUTF8StringGetBuffer      (__JSONUTF8String utf8String);
-
-// Get the size of the internal buffer
-CFIndex              __JSONUTF8StringGetMaximumSize (__JSONUTF8String utf8String);
-
-// Deallocate internal members of __JSONUTF8String stuct.
-void                 __JSONUTF8StringDestroy        (__JSONUTF8String utf8String);
 
 #pragma Helper stack for parsing
 
@@ -110,13 +79,13 @@ bool                __JSONStackAppendKeyAtTop   (__JSONStackRef stack, CFIndex k
 
 #pragma Internal callbacks for libyajl parser
 
-int __JSONParserAppendStringWithBytes    (void *context, const unsigned char *value, unsigned int length);
+int __JSONParserAppendStringWithBytes    (void *context, const unsigned char *value, size_t length);
 int __JSONParserAppendNull               (void *context);
 int __JSONParserAppendBooleanWithInteger (void *context, int value);
-int __JSONParserAppendNumberWithBytes    (void *context, const char *value, unsigned int length);
+int __JSONParserAppendNumberWithBytes    (void *context, const char *value, size_t length);
 int __JSONParserAppendNumberWithLong     (void *context, long value);
 int __JSONParserAppendNumberWithDouble   (void *context, double value);
-int __JSONParserAppendMapKeyWithBytes    (void *context, const unsigned char *value, unsigned int length);
+int __JSONParserAppendMapKeyWithBytes    (void *context, const unsigned char *value, size_t length);
 int __JSONParserAppendMapStart           (void *context);
 int __JSONParserAppendMapEnd             (void *context);
 int __JSONParserAppendArrayStart         (void *context);
@@ -124,16 +93,16 @@ int __JSONParserAppendArrayEnd           (void *context);
 
 #pragma Internal memory allocation
 
-void *__JSONAllocatorAllocate   (void *ctx, unsigned int sz);
+void *__JSONAllocatorAllocate   (void *ctx, size_t sz);
 void  __JSONAllocatorDeallocate (void *ctx, void *ptr);
-void *__JSONAllocatorReallocate (void *ctx, void *ptr, unsigned int sz);
+void *__JSONAllocatorReallocate (void *ctx, void *ptr, size_t sz);
 
 typedef struct {
   CFAllocatorRef     allocator;
   CFIndex            retainCount;
 
   yajl_handle        yajlParser;
-  yajl_parser_config yajlParserConfig;
+//  yajl_parser_config yajlParserConfig;
   yajl_status        yajlParserStatus;
   yajl_callbacks     yajlParserCallbacks;
   yajl_alloc_funcs   yajlAllocFuncs;

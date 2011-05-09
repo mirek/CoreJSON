@@ -1,13 +1,24 @@
 //
-//  CoreJSONTests.m
-//  CoreJSONTests
+// CoreJSONTests.m
+// CoreJSON Framework
 //
-//  Created by Mirek Rusin on 16/02/2011.
-//  Copyright 2011 Inteliv Ltd. All rights reserved.
+// Copyright 2011 Mirek Rusin <mirek [at] me [dot] com>
+//                http://github.com/mirek/CoreJSON
+//
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 
 #import "CoreJSONTests.h"
-
 
 @implementation CoreJSONTests
 
@@ -30,20 +41,16 @@
 
 - (void) testGenerator {
   CFUUIDRef uuid = CFUUIDCreate(NULL);
-  
-  id object = [NSDictionary dictionaryWithObjectsAndKeys:
+  id object = [[NSDictionary alloc] initWithObjectsAndKeys:
                [NSNumber numberWithLongLong: 9223372036854775807], @"number",
                uuid, @"uuid",
                nil];
-  
   NSError *error = nil;
   NSString *json = (NSString *)JSONCreateString(testAllocator, object, kJSONWriteOptionsDefault, (CFErrorRef *)&error);
-  
+  STAssertTrue([json length] > 0, @"Generated string should have length > 0");
   [object release];
-  
   [json release];
   [error release];
-  
   CFRelease(uuid);
 }
 

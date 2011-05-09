@@ -5,6 +5,18 @@
 // Copyright 2011 Mirek Rusin <mirek [at] me [dot] com>
 //                http://github.com/mirek/CoreJSON
 //
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
 
 #include "CoreJSON.h"
 
@@ -14,37 +26,6 @@
   int __json_return = __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, __json_element)); \
   CFRelease(__json_element); \
   return __json_return
-
-#pragma Internal string helper for fast UTF8 buffer access
-
-inline __JSONUTF8String __JSONUTF8StringMake(CFAllocatorRef allocator, CFStringRef string) {
-  __JSONUTF8String utf8String;
-  utf8String.allocator = allocator;
-  utf8String.string = string;
-  utf8String.maximumSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(string), kCFStringEncodingUTF8) + 1;
-  if ((utf8String.pointer = (const unsigned char *)CFStringGetCStringPtr(string, kCFStringEncodingUTF8))) {
-    utf8String.buffer = NULL;
-  } else {
-    utf8String.buffer = CFAllocatorAllocate(allocator, utf8String.maximumSize, 0);
-    if (utf8String.buffer) {
-      CFStringGetCString(string, (char *)utf8String.buffer, utf8String.maximumSize, kCFStringEncodingUTF8);
-    }
-  }
-  return utf8String;
-}
-
-inline const unsigned char *__JSONUTF8StringGetBuffer(__JSONUTF8String utf8String) {
-  return utf8String.pointer ? utf8String.pointer : utf8String.buffer;
-}
-
-inline CFIndex __JSONUTF8StringGetMaximumSize(__JSONUTF8String utf8String) {
-  return utf8String.maximumSize;
-}
-
-inline void __JSONUTF8StringDestroy(__JSONUTF8String utf8String) {
-  if (utf8String.buffer)
-    CFAllocatorDeallocate(utf8String.allocator, (void *)utf8String.buffer);
-}
 
 #pragma Internal stack
 
@@ -228,7 +209,7 @@ inline bool __JSONStackAppendKeyAtTop(__JSONStackRef stack, CFIndex key) {
 
 #pragma Parser callbacks
 
-inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, unsigned int length) {
+inline int __JSONParserAppendStringWithBytes(void *context, const unsigned char *value, size_t length) {
   __JSONRef json = (__JSONRef)context;
   __JSON_CONSUME_AND_RETURN(CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0));
 }
@@ -243,7 +224,7 @@ inline int __JSONParserAppendBooleanWithInteger(void *context, int value) {
   return __JSONStackAppendValueAtTop(json->stack, __JSONElementsAppend(json, value ? kCFBooleanTrue : kCFBooleanFalse));
 }
 
-inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, unsigned int length) {
+inline int __JSONParserAppendNumberWithBytes(void *context, const char *value, size_t length) {
   __JSONRef json = (__JSONRef)context;
   CFNumberRef number = NULL;
 
@@ -275,7 +256,7 @@ inline int __JSONParserAppendNumberWithDouble(void *context, double value) {
 }
 
 // LOOK OUT! Appending to key array, not the value array
-inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, unsigned int length) {
+inline int __JSONParserAppendMapKeyWithBytes(void *context, const unsigned char *value, size_t length) {
   __JSONRef json = (__JSONRef)context;
   CFTypeRef __json_element = CFStringCreateWithBytes(json->allocator, value, length, kCFStringEncodingUTF8, 0);
   int __json_return = __JSONStackAppendKeyAtTop(json->stack, __JSONElementsAppend(json, __json_element));
@@ -375,7 +356,7 @@ inline CFIndex __JSONElementsAppend(__JSONRef json, CFTypeRef value) {
 
 #pragma Memory allocation
 
-inline void *__JSONAllocatorAllocate(void *ctx, unsigned int sz) {
+inline void *__JSONAllocatorAllocate(void *ctx, size_t sz) {
   return CFAllocatorAllocate(ctx, sz, 0);
 }
 
@@ -383,7 +364,7 @@ inline void __JSONAllocatorDeallocate(void *ctx, void *ptr) {
   CFAllocatorDeallocate(ctx, ptr);
 }
 
-inline void *__JSONAllocatorReallocate(void *ctx, void *ptr, unsigned int sz) {
+inline void *__JSONAllocatorReallocate(void *ctx, void *ptr, size_t sz) {
   return CFAllocatorReallocate(ctx, ptr, sz, 0);
 }
 
@@ -414,9 +395,6 @@ inline __JSONRef __JSONCreate(CFAllocatorRef allocator, JSONReadOptions options)
     json->yajlParserCallbacks.yajl_end_array   = __JSONParserAppendArrayEnd;
     
     json->yajlParserCallbacks.yajl_string      = __JSONParserAppendStringWithBytes;
-    
-    json->yajlParserConfig.allowComments = kJSONReadOptionAllowComments | options ? 1 : 0;
-    json->yajlParserConfig.checkUTF8 = kJSONReadOptionCheckUTF8 | options ? 1 : 0;
     
     json->elementsIndex = 0;
     json->elementsSize = CORE_JSON_ELEMENTS_INITIAL_SIZE;
@@ -457,24 +435,41 @@ inline __JSONRef __JSONRelease(__JSONRef json) {
 
 inline bool __JSONParseWithString(__JSONRef json, CFStringRef string, CFErrorRef *error) {
   bool success = 1;
-  json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlParserConfig, &json->yajlAllocFuncs, (void *)json);
+  json->yajlParser = yajl_alloc(&json->yajlParserCallbacks, &json->yajlAllocFuncs, (void *)json);
+  if (json->yajlParser) {
+//  yajl_config(json->yajlParser, yajl_allow_comments, kJSONReadOptionAllowComments | options ? 1 : 0);
+//  yajl_config(json->yajlParser, yajl_dont_validate_strings, kJSONReadOptionCheckUTF8 | options ? 1 : 0);
   
-  __JSONUTF8String utf8 = __JSONUTF8StringMake(json->allocator, string);
-  if ((json->yajlParserStatus = yajl_parse(json->yajlParser, __JSONUTF8StringGetBuffer(utf8), (unsigned int)__JSONUTF8StringGetMaximumSize(utf8))) != yajl_status_ok) {
-    if (error) {
+    CFDataRef data = CFStringCreateExternalRepresentation(json->allocator, string, kCFStringEncodingUTF8, 0);
+    if (data) {
+      if ((json->yajlParserStatus = yajl_parse(json->yajlParser, CFDataGetBytePtr(data), CFDataGetLength(data))) != yajl_status_ok) {
+        if (error) {
+          success = 0;
+          
+          unsigned char * str = yajl_get_error(json->yajlParser, 1, CFDataGetBytePtr(data), CFDataGetLength(data));
+          fprintf(stderr, "%s", (const char *) str);
+          yajl_free_error(json->yajlParser, str);
+          
+          *error = CFErrorCreateWithUserInfoKeysAndValues(json->allocator, CFSTR("com.github.mirek.CoreJSON"), (CFIndex)json->yajlParserStatus, (const void *) { kCFErrorDescriptionKey }, (const void *) { CFSTR("Test") }, 1);
+        }
+        // TODO: Error stuff
+        //printf("ERROR: %s\n", yajl_get_error(json->yajlParser, 1, __JSONUTF8StringGetBuffer(utf8), __JSONUTF8StringGetMaximumSize(utf8)));
+      }
+    
+      json->yajlParserStatus = yajl_complete_parse(json->yajlParser);
+      CFRelease(data);
+    } else {
       success = 0;
-//      __JSONErrorCreate(json->allocator, )
-//      CFDictionaryCreate(<#CFAllocatorRef allocator#>, <#const void **keys#>, <#const void **values#>, <#CFIndex numValues#>, <#const CFDictionaryKeyCallBacks *keyCallBacks#>, <#const CFDictionaryValueCallBacks *valueCallBacks#>)
-//      *error = CFErrorCreate(json->allocator, CORE_JSON_ERROR_DOMAIN, (CFIndex)json->yajlParserStatus, userInfo);
+      // TODO: data is 0
     }
-    // TODO: Error stuff
-    //printf("ERROR: %s\n", yajl_get_error(json->yajlParser, 1, __JSONUTF8StringGetBuffer(utf8), __JSONUTF8StringGetMaximumSize(utf8)));
+    yajl_free(json->yajlParser);
+    json->yajlParser = NULL;
+  } else {
+    
+    // TODO: Couldn't allocate
+    *error = CFErrorCreate(json->allocator, CFSTR("com.github.mirek.CoreJSON"), -1, NULL);
+    success = 0;
   }
-  __JSONUTF8StringDestroy(utf8);
-  
-  json->yajlParserStatus = yajl_parse_complete(json->yajlParser);
-  yajl_free(json->yajlParser);
-  json->yajlParser = NULL;
   
   return success;
 }
@@ -499,9 +494,13 @@ inline CFTypeRef __JSONCreateObject(__JSONRef json) {
 #pragma Generator
 
 inline void __JSONGeneratorAppendString(CFAllocatorRef allocator, yajl_gen *g, CFStringRef value) {
-  __JSONUTF8String utf8 = __JSONUTF8StringMake(allocator, value);
-  yajl_gen_string(*g, __JSONUTF8StringGetBuffer(utf8), (unsigned int)strlen((const char *)__JSONUTF8StringGetBuffer(utf8))); 
-  __JSONUTF8StringDestroy(utf8);
+  CFDataRef data = CFStringCreateExternalRepresentation(allocator, value, kCFStringEncodingUTF8, 0);
+  if (data) {
+    yajl_gen_string(*g, CFDataGetBytePtr(data), CFDataGetLength(data));
+    CFRelease(data);
+  } else {
+    // TODO: Error
+  }
 }
 
 inline void __JSONGeneratorAppendDoubleTypeNumber(CFAllocatorRef allocator, yajl_gen *g, CFNumberRef value) {
@@ -599,19 +598,19 @@ inline CFStringRef JSONCreateString(CFAllocatorRef allocator, CFTypeRef value, J
   yajl_alloc_funcs yajlAllocFuncs;
   yajlAllocFuncs.ctx = (void *)allocator;
   yajlAllocFuncs.malloc = __JSONAllocatorAllocate;
-  yajlAllocFuncs.free   = __JSONAllocatorDeallocate;
+  yajlAllocFuncs.free = __JSONAllocatorDeallocate;
   yajlAllocFuncs.realloc = __JSONAllocatorReallocate;
-  yajl_gen_config yajlGenConfig;
-  yajlGenConfig.beautify     = options | kJSONWriteOptionIndent ? 1 : 0;
-  yajlGenConfig.indentString = options | kJSONWriteOptionIndent ? "  " : 0;
-  yajl_gen yajlGen = yajl_gen_alloc(&yajlGenConfig, &yajlAllocFuncs);
+//  yajl_gen_config yajlGenConfig;
+//  yajlGenConfig.beautify     = options | kJSONWriteOptionIndent ? 1 : 0;
+//  yajlGenConfig.indentString = options | kJSONWriteOptionIndent ? "  " : 0;
+  yajl_gen yajlGen = yajl_gen_alloc(&yajlAllocFuncs);
   __JSONGeneratorAppendValue(allocator, &yajlGen, value);
   const unsigned char *buffer = NULL;
-  unsigned int length = 0;
+  size_t length = 0;
   switch (yajl_gen_get_buf(yajlGen, &buffer, &length)) {
     case yajl_gen_status_ok: // no error
       break;
-      
+
     case yajl_gen_keys_must_be_strings: // at a point where a map key is generated, a function other than yajl_gen_string was called 
       break;
       
@@ -625,6 +624,9 @@ inline CFStringRef JSONCreateString(CFAllocatorRef allocator, CFTypeRef value, J
       break;
       
     case yajl_gen_invalid_number: // yajl_gen_double was passed an invalid floating point value (infinity or NaN)
+      break;
+      
+    case yajl_gen_invalid_string: // returned from yajl_gen_string() when the yajl_gen_validate_utf8 option is enabled and an invalid was passed by client code.
       break;
       
     case yajl_gen_no_buf: // A print callback was passed in, so there is no internal buffer to get from
