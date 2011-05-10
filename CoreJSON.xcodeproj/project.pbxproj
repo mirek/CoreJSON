@@ -43,10 +43,10 @@
 		EB173E431316C2AE00C173A9 /* yajl.c in Sources */ = {isa = PBXBuildFile; fileRef = EB173E211316C2AE00C173A9 /* yajl.c */; };
 		EB173E441316C2AE00C173A9 /* yajl.c in Sources */ = {isa = PBXBuildFile; fileRef = EB173E211316C2AE00C173A9 /* yajl.c */; };
 		EB173E451316C2AE00C173A9 /* yajl.c in Sources */ = {isa = PBXBuildFile; fileRef = EB173E211316C2AE00C173A9 /* yajl.c */; };
-		EB28F71D135D981700A409C7 /* TestAllocator.c in Sources */ = {isa = PBXBuildFile; fileRef = EB28F71B135D981700A409C7 /* TestAllocator.c */; };
 		EB59CC2D1376F99B00C02960 /* yajl_tree.c in Sources */ = {isa = PBXBuildFile; fileRef = EB59CC2C1376F99B00C02960 /* yajl_tree.c */; };
 		EB59CC2E1376F99B00C02960 /* yajl_tree.c in Sources */ = {isa = PBXBuildFile; fileRef = EB59CC2C1376F99B00C02960 /* yajl_tree.c */; };
 		EB59CC2F1376F99B00C02960 /* yajl_tree.c in Sources */ = {isa = PBXBuildFile; fileRef = EB59CC2C1376F99B00C02960 /* yajl_tree.c */; };
+		EBA2F87E1379AA5C002E5AD4 /* CoreTestAllocator.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2F87C1379AA5C002E5AD4 /* CoreTestAllocator.c */; };
 		EBB1ADE01312A9DE006476A7 /* CoreJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = EBB81076130BEC8C00CF5EF8 /* CoreJSON.c */; };
 		EBB1ADE21312A9ED006476A7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */; };
 		EBB1ADE41312AA16006476A7 /* CoreJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB81077130BEC8C00CF5EF8 /* CoreJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -88,10 +88,10 @@
 		EB173E1F1316C2AE00C173A9 /* yajl_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yajl_parser.h; path = YAJL/yajl/src/yajl_parser.h; sourceTree = SOURCE_ROOT; };
 		EB173E201316C2AE00C173A9 /* yajl_version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yajl_version.c; path = YAJL/yajl/src/yajl_version.c; sourceTree = SOURCE_ROOT; };
 		EB173E211316C2AE00C173A9 /* yajl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yajl.c; path = YAJL/yajl/src/yajl.c; sourceTree = SOURCE_ROOT; };
-		EB28F71B135D981700A409C7 /* TestAllocator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TestAllocator.c; path = TestAllocator/TestAllocator.c; sourceTree = "<group>"; };
-		EB28F71C135D981700A409C7 /* TestAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAllocator.h; path = TestAllocator/TestAllocator.h; sourceTree = "<group>"; };
 		EB59CC2C1376F99B00C02960 /* yajl_tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yajl_tree.c; path = YAJL/yajl/src/yajl_tree.c; sourceTree = SOURCE_ROOT; };
 		EB7354C2130E688300D6C2D8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
+		EBA2F87C1379AA5C002E5AD4 /* CoreTestAllocator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CoreTestAllocator.c; path = CoreTestAllocator/CoreTestAllocator.c; sourceTree = "<group>"; };
+		EBA2F87D1379AA5C002E5AD4 /* CoreTestAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreTestAllocator.h; path = CoreTestAllocator/CoreTestAllocator.h; sourceTree = "<group>"; };
 		EBB1ADD81312A7B6006476A7 /* libCoreJSON (iOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libCoreJSON (iOS).a"; path = libCoreJSON_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB1ADE11312A9ED006476A7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.2.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		EBB1AE7E1312B683006476A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -161,15 +161,6 @@
 				EB173E211316C2AE00C173A9 /* yajl.c */,
 			);
 			name = YAJL;
-			sourceTree = "<group>";
-		};
-		EB28F719135D97F900A409C7 /* TestAllocator */ = {
-			isa = PBXGroup;
-			children = (
-				EB28F71C135D981700A409C7 /* TestAllocator.h */,
-				EB28F71B135D981700A409C7 /* TestAllocator.c */,
-			);
-			name = TestAllocator;
 			sourceTree = "<group>";
 		};
 		EBB1ADE31312A9F5006476A7 /* iOS */ = {
@@ -243,7 +234,6 @@
 		EBB81063130BEC3E00CF5EF8 /* CoreJSONTests */ = {
 			isa = PBXGroup;
 			children = (
-				EB28F719135D97F900A409C7 /* TestAllocator */,
 				EBCA2945131F03C400361057 /* tests */,
 				EBB8106A130BEC3E00CF5EF8 /* CoreJSONTests.h */,
 				EBB8106C130BEC3E00CF5EF8 /* CoreJSONTests.m */,
@@ -255,6 +245,8 @@
 		EBB81064130BEC3E00CF5EF8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EBA2F87D1379AA5C002E5AD4 /* CoreTestAllocator.h */,
+				EBA2F87C1379AA5C002E5AD4 /* CoreTestAllocator.c */,
 				EBB81065130BEC3E00CF5EF8 /* CoreJSONTests-Info.plist */,
 				EBB81066130BEC3E00CF5EF8 /* InfoPlist.strings */,
 				EBB81069130BEC3E00CF5EF8 /* CoreJSONTests-Prefix.pch */,
@@ -470,8 +462,8 @@
 				EB173E3C1316C2AE00C173A9 /* yajl_parser.c in Sources */,
 				EB173E411316C2AE00C173A9 /* yajl_version.c in Sources */,
 				EB173E441316C2AE00C173A9 /* yajl.c in Sources */,
-				EB28F71D135D981700A409C7 /* TestAllocator.c in Sources */,
 				EB59CC2E1376F99B00C02960 /* yajl_tree.c in Sources */,
+				EBA2F87E1379AA5C002E5AD4 /* CoreTestAllocator.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

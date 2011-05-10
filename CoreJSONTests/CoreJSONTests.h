@@ -21,7 +21,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "CoreJSON.h"
 #import "time.h"
-#import "TestAllocator.h"
+#import "CoreTestAllocator.h"
 
 #define MAX_FRAMES 100
 
